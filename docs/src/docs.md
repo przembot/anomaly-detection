@@ -57,7 +57,7 @@ zawierający 80.
 ### Las izolacji
 Parametry etapu uczenia:
   * liczba drzew _t_
-  * rozmiar zbioru uczącego \( \psi \)
+  * rozmiar zbioru uczącego $$ \psi $$
 Parametry etapu oceny:
   * maksymalna wysokość drzewa _hlim_
 
