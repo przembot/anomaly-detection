@@ -24,6 +24,7 @@ all: $(objects)
 # Recipe for converting a Markdown file into PDF using Pandoc
 $(output)/%.pdf: $(source)/%.md
 	pandoc \
+		--filter pandoc-citeproc \
 		--variable mainfont="DejaVu Sans" \
 		--variable monofont="DejaVu Sans Mono" \
 		--variable fontsize=11pt \

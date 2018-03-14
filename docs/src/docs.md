@@ -11,6 +11,8 @@ indent: true
 
 colorlinks: true
 urlcolor: blue
+
+bibliography: src/ref.bib
 ---
 
 # Szczegółowa interpretacja tematu projektu
@@ -21,12 +23,24 @@ Bardziej szczegółowa interpretacja projektu została opisana w rozdziale trzec
 
 
 ## Algorytm implementowany
-Detekcja anomalii z wykorzystaniem lasu izolacji (_iForest_) polega na separacji próbki na podstawie zmierzonego stopnia podatności na izolację. W tym celu metoda wykorzystuje właściwości anomalii - niewielką liczebność oraz znacząco różniące się wartości atrybutów. 
+Detekcja anomalii z wykorzystaniem lasu izolacji (_iForest_) polega na separacji próbki na
+podstawie zmierzonego stopnia podatności na izolację. W tym celu metoda wykorzystuje właściwości
+anomalii - niewielką liczebność oraz znacząco różniące się wartości atrybutów.
 
-Izolacja jest zrealizowana z użyciem prawidłowych drzew binarnych (_iTree_), w których każdy węzeł w drzewie ma dokładnie zero lub dwa węzły potomne. Przyjętą miarą podatności na izolację jest długość ścieżki, czyli liczba krawędzi jakie należy przejść, by dojść od pnia do danej próbki (o ile przejście to nie przekracza zdefiniowanej maksymalnej wysokości drzewa). Przykłady o krótkiej ścieżce mają wysoką podatność, ponieważ obserwacje o wyróżniających się wartościach atrybutów mają większe szanse na oddzielenie w początkowej fazie procesu partycjonowania, a dodatkowo niewielka liczba anomalii powoduje mniejszą liczbę partycji. 
+Izolacja jest zrealizowana z użyciem prawidłowych drzew binarnych (_iTree_), w których każdy węzeł
+w drzewie ma dokładnie zero lub dwa węzły potomne. Przyjętą miarą podatności na izolację jest
+długość ścieżki, czyli liczba krawędzi jakie należy przejść, by dojść od pnia do danej próbki
+(o ile przejście to nie przekracza zdefiniowanej maksymalnej wysokości drzewa). Przykłady o
+krótkiej ścieżce mają wysoką podatność, ponieważ obserwacje o wyróżniających się wartościach
+atrybutów mają większe szanse na oddzielenie w początkowej fazie procesu partycjonowania, a
+dodatkowo niewielka liczba anomalii powoduje mniejszą liczbę partycji.
 
-Wykrywanie anomalii na podstawie lasu izolacyjnego jest dwustopniowe. Pierwszy etap, uczenie, polega na budowie drzew
-izolacji z użyciem podpróbek zbioru testowego. W następnym etapie algorytm przekazuje przykłady testowe przez drzewa izolacji, aby uzyskać wynik anomalii dla każdego z nich. Sposobem wykrywania anomalii jest sortowanie przykładów według ich średniej długości ścieżki. Anomalie są przykładami, które znajdują się na górze listy.
+Wykrywanie anomalii na podstawie lasu izolacyjnego jest dwustopniowe.
+Pierwszy etap, uczenie, polega na budowie drzew
+izolacji z użyciem podpróbek zbioru testowego. W następnym etapie algorytm przekazuje
+przykłady testowe przez drzewa izolacji, aby uzyskać wynik anomalii dla każdego z nich.
+Sposobem wykrywania anomalii jest sortowanie przykładów według ich średniej długości ścieżki.
+Anomalie są przykładami, które znajdują się na górze listy.
 
 
 ## Algorytmy wykorzystane do badań
@@ -49,8 +63,7 @@ i anomalia.
 
 ### LOF - local outlier factor
 
-http://www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf
-Algorytm klasyfikacji LOF wykorzystuje k-NN do określenia zagęszczenia punktów.
+Algorytm klasyfikacji LOF [@breunig2000lof] wykorzystuje k-NN do określenia zagęszczenia punktów.
 Przez porównanie lokalnej gęstości przykładu do lokalnej gęstości
 jego sąsiadów można określić regiony o podobnej gęstości oraz punkty
 znacząco mniejsze zagęszczenie niż ich sąsiedzi.
@@ -79,9 +92,76 @@ zadania klasyfikacji, w którym występują tylko
 2 kategorię.
 
 
-## Charakterystyka wykorzystywanego zbioru danych
-Do badań zostanie wykorzystany zbiór danych z repozytorium UCL - [SPECT Heart][dataset].
-Zawarto w nim wyniki badań tomografii serca człowieka.
+## Charakterystyka wykorzystywanych zbiorów danych
+
+Do badań wykorzystane zostaną zbiory danych dostępne
+w repozytorium _UCL_.
+
+### Website Phishing
+[Website Phishing][wphish] to zbiór danych opisujący adresy
+stron WWW, które mogą przekierować użytkownika w niepożądane miejsce
+(atak typu phishing).
+Występuje tutaj 10 atrybutów, każdy może posiadać 2 lub 3 wartości
+określające, czy dana cecha badanego adresu WWW jest legalna,
+podejrzana bądź łudząca (odpowiednio wartości - 1, 0, -1).
+Występuje 1353 przykładowych danych. Przed rozpoczęciem pracy
+należy odfiltrować z niej posiadające klasę _podejrzany_,
+gdyż wykrycie anomalii polega na jednoznacznym stwierdzeniu,
+bez brania pod uwagę niepewności.
+
+Cechy danego adresu to:
+
+- czy użycie SFH nie wzbudza podejrzeń,
+- czy strona używa okna pop-up,
+- użycie SSL i wraz z oceną podmiotu wystawiającego certyfikat,
+- czy adres posiada długi opis żądania,
+- czy adres nie ma w sobie za dużo uchwytów (_anchor_),
+- czy ruch na podanej stronie jest odpowiednio duży (sprawdzony w zewnętrznej bazie Alexadatabase),
+- długość adresu,
+- wiek domeny,
+- użycie adresu IP w adresie,
+
+### Phishing Websites
+[Phishing Websites][phishw] jest kolejnym zbiorem danych
+opisujących adresy, które mogą być związane z atakiem typu phishing.
+Występuje tutaj 30 atrybutów i 2456 instancji. Atrybuty mogą posiadać
+2 lub 3 wartości ze znaczeniem identycznym jak w poprzednim zbiorze danych.
+
+Atrybuty opisują:
+
+- zawieranie adresu IP w odnośniku,
+- długość adresu,
+- użycie serwisu do skracania adresu,
+- posiadanie symbolu _@_,
+- przekierowanie z użyciem _//_,
+- dodanie prefiksu bądź sufiksu za pomocą _-_,
+- ilość poddomen,
+- użycie SSL wraz z oceną podmiotu wystawiającego certyfikat; wiek certyfikatu,
+- czas rejestracji domeny,
+- czy odnośnik favicon jest zewnętrzny,
+- używanie niestandardowego portu,
+- użycie _https_ jako części adresu (np. https-google.com),
+- czy adres posiada długi opis żądania,
+- czy adres nie ma w sobie za dużo uchwytów (_anchor_),
+- odnośniki w tagach _meta, script oraz link_,
+- czy użycie SFH nie wzbudza podejrzeń,
+- wysyłanie informacji za pomocą maila,
+- czy nazwa podmiotu zawiera się w adresie (sprawdzenie za pomocą WHOIS),
+- liczba przekierowań,
+- wykorzystanie zdarzenia _onMouseOver_ do zmiany status bara,
+- wyłączanie możliwości kliknięcia prawego przycisku myszy,
+- przekierowanie za pomocą _IFrame_,
+- wiek domeny,
+- czy istnieje rekord w DNS,
+- czy ruch na podanej stronie jest odpowiednio duży (sprawdzony w zewnętrznej bazie Alexadatabase),
+- jaki jest PageRank adresu,
+- czy strona jest indeksowana przez Google,
+- liczba odnośników wskazujących na stronę,
+- czy adres istnieje w bazie danych adresów phishingowych (np. PhishTank, StopBadware).
+
+### SPECT Heart
+Zbiór danych [SPECT Heart][dataset]
+zawiera wyniki badań tomografii serca człowieka.
 W wyniku ekstrakcji danych z powstałych w czasie badania zdjęć
 powstał podany zbiór danych.
 Zawiera on 22 atrybuty binarne opisujące badanie
@@ -89,6 +169,10 @@ oraz jeden atrybut binarny będący wynikiem klasyfikacji.
 Zbiór danych podzielony został na zbiór trenujący,
 zawierający 187 przykładów oraz zbiór testowy,
 zawierający 80.
+
+Podany zbiór różni się od pozostałych ilością dostępnych próbek (poniżej 300),
+jak i tematyką danych. Posłuży on do dodatkowego porównania
+jakości algorytmów.
 
 
 ## Parametry algorytmów
@@ -136,5 +220,9 @@ do porównania
 Istotny wydaje się również wybór odpowiedniego jądra wraz z parametrami
 dla algorytmu SVM, który zostanie dokonany później.
 
+# Bibliografia
+
 
 [dataset]: https://archive.ics.uci.edu/ml/datasets/SPECT+Heart "SPECT Heart"
+[wphish]: https://archive.ics.uci.edu/ml/datasets/Website+Phishing
+[phishw]: https://archive.ics.uci.edu/ml/datasets/Phishing+Websites
