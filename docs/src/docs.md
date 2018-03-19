@@ -259,6 +259,7 @@ biblioteki implementujące algorytmy wykorzystane
 do porównania
 Istotny wydaje się również wybór odpowiedniego jądra wraz z parametrami
 dla algorytmu SVM, który zostanie dokonany później.
+W miarę możliwości może być również powiększana wykorzystywana liczba próbek z zbioru danych [KDD Cup 1999 Data].
 
 # Bibliografia
 
