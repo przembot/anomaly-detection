@@ -97,6 +97,46 @@ zadania klasyfikacji, w którym występują tylko
 Do badań wykorzystane zostaną zbiory danych dostępne
 w repozytorium _UCL_.
 
+### KDD Cup 1999 Data
+Zbiór danych [KDD Cup 1999 Data][kdd] zawiera informacje o połączeniach TCP na podstawie zapisanego ruchu w sieci LAN symulującej typową sieć U.S. Air Force. Każde z połączeń jest oznaczone jako połączenie poprawne lub atak określonego typu. Zbiór posiada 42 atrybuty, łączna liczba instancji to 4.000.000, natomiast na rzecz projektu postanowiono wykorzystać losowe wybrane 100.000 próbek. 
+
+Cechy pojedyńczego połączenia TCP:
+- czas trwania połączenia (w sekundach),
+- typ protokółu warstwy transportowej,
+- usługa sieciowa,
+- liczba bajtów danych wysyłanych,
+- liczba bajtów danych odbieranych,
+- status połączenia (normalny/błąd),
+- 1 if connection is from/to the same host/port; 0 otherwise (?)
+- liczba niepoprawnych fragmentów,
+- liczba pakietów z flagą URG.
+
+Cechy zawartości na podstawie domeny
+- liczba "gorących" wskaźników (?)
+- liczba nieudanych prób logowania,
+- informacja o poprawnym logowaniu,
+- liczba skompromitowanych warunków (?),
+- informacja o uzyskanym dostępie do powłoki głównej (root shell),
+- informacja o wywołaniu polecenia ,,su root'',
+- liczba dostępu do roota,
+- liczba operacji tworzenia pliku,
+- liczba powłok systemowych,
+- liczba operacji kontroli dostępu do plików,
+- liczba wychodzących poleceń w sesji ftp,
+- informacja o przynależności loginu do "gorącej" listy,
+- informacja o zalogowaniu jako ,,gość''.
+
+Cechy ruchu sieciowego obliczone w dwu-sekundowym oknie czasowym
+- liczba połączeń do tej samej maszynie,
+- procent połączeń z błędami ,,SYN''(?),
+- procent połączeń z błędami ,,REJ'' (RST po próbie SYN),
+- procent połączeń do tej samej usługi,
+- procent połączeń do innych usług,
+- liczba połączeń do tej samej usługi,
+- analogicznie: procent połączeń z błędami ,,SYN'', ,,REJ'', do innncyh usług.
+
+
+
 ### Website Phishing
 [Website Phishing][wphish] to zbiór danych opisujący adresy
 stron WWW, które mogą przekierować użytkownika w niepożądane miejsce
@@ -226,3 +266,4 @@ dla algorytmu SVM, który zostanie dokonany później.
 [dataset]: https://archive.ics.uci.edu/ml/datasets/SPECT+Heart "SPECT Heart"
 [wphish]: https://archive.ics.uci.edu/ml/datasets/Website+Phishing
 [phishw]: https://archive.ics.uci.edu/ml/datasets/Phishing+Websites
+[kdd]: http://archive.ics.uci.edu/ml/datasets/kdd+cup+1999+data
