@@ -98,7 +98,12 @@ Do badań wykorzystane zostaną zbiory danych dostępne
 w repozytorium _UCL_.
 
 ### KDD Cup 1999 Data
-Zbiór danych [KDD Cup 1999 Data][kdd] zawiera informacje o połączeniach TCP na podstawie zapisanego ruchu w sieci LAN symulującej typową sieć U.S. Air Force. Każde z połączeń jest oznaczone jako połączenie poprawne lub atak określonego typu. Zbiór posiada 42 atrybuty, łączna liczba instancji to 4.000.000, natomiast na rzecz projektu postanowiono wykorzystać losowe wybrane 100.000 próbek. 
+Zbiór danych [KDD Cup 1999 Data][kdd] zawiera informacje
+o połączeniach TCP na podstawie zapisanego ruchu w sieci LAN
+symulującej typową sieć U.S. Air Force. Każde z połączeń jest oznaczone
+jako połączenie poprawne lub atak określonego typu. Zbiór posiada 42 atrybuty,
+łączna liczba instancji to 4.000.000, natomiast na rzecz projektu postanowiono
+wykorzystać losowe wybrane 100.000 próbek.
 
 Cechy pojedyńczego połączenia TCP:
 - czas trwania połączenia (w sekundach),
@@ -107,15 +112,15 @@ Cechy pojedyńczego połączenia TCP:
 - liczba bajtów danych wysyłanych,
 - liczba bajtów danych odbieranych,
 - status połączenia (normalny/błąd),
-- 1 if connection is from/to the same host/port; 0 otherwise (?)
+- czy połączenie pochodzi/wychodzi do tego samego hosta/na ten sam port,
 - liczba niepoprawnych fragmentów,
 - liczba pakietów z flagą URG.
 
 Cechy zawartości na podstawie domeny
-- liczba "gorących" wskaźników (?)
+- liczba spełnionych "gorących" wskaźników,
 - liczba nieudanych prób logowania,
 - informacja o poprawnym logowaniu,
-- liczba skompromitowanych warunków (?),
+- liczba spełnionych warunków oznaczających włamanie,
 - informacja o uzyskanym dostępie do powłoki głównej (root shell),
 - informacja o wywołaniu polecenia ,,su root'',
 - liczba dostępu do roota,
@@ -128,7 +133,7 @@ Cechy zawartości na podstawie domeny
 
 Cechy ruchu sieciowego obliczone w dwu-sekundowym oknie czasowym
 - liczba połączeń do tej samej maszynie,
-- procent połączeń z błędami ,,SYN''(?),
+- procent połączeń z błędami ,,SYN'',
 - procent połączeń z błędami ,,REJ'' (RST po próbie SYN),
 - procent połączeń do tej samej usługi,
 - procent połączeń do innych usług,
@@ -172,7 +177,7 @@ Atrybuty opisują:
 - zawieranie adresu IP w odnośniku,
 - długość adresu,
 - użycie serwisu do skracania adresu,
-- posiadanie symbolu _@_,
+- posiadanie symbolu _\@_,
 - przekierowanie z użyciem _//_,
 - dodanie prefiksu bądź sufiksu za pomocą _-_,
 - ilość poddomen,
@@ -256,10 +261,13 @@ wyliczenie miary jakości w sposób wyżej opisany.
 Ze względu na ograniczoną w chwili obecnej wiedzę na temat
 dostępnych bibliotek, później będą wybrane
 biblioteki implementujące algorytmy wykorzystane
-do porównania
+do porównania.
 Istotny wydaje się również wybór odpowiedniego jądra wraz z parametrami
 dla algorytmu SVM, który zostanie dokonany później.
 W miarę możliwości może być również powiększana wykorzystywana liczba próbek z zbioru danych [KDD Cup 1999 Data].
+Dopuszczamy również możliwość ograniczenia liczby atrybutów, jeżeli
+nie będziemy w stanie obsłużyć tak dużej ilości atrybutów.
+
 
 # Bibliografia
 
