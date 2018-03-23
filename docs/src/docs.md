@@ -141,31 +141,6 @@ Cechy ruchu sieciowego obliczone w dwu-sekundowym oknie czasowym
 - analogicznie: procent połączeń z błędami ,,SYN'', ,,REJ'', do innncyh usług.
 
 
-
-### Website Phishing
-[Website Phishing][wphish] to zbiór danych opisujący adresy
-stron WWW, które mogą przekierować użytkownika w niepożądane miejsce
-(atak typu phishing).
-Występuje tutaj 10 atrybutów, każdy może posiadać 2 lub 3 wartości
-określające, czy dana cecha badanego adresu WWW jest legalna,
-podejrzana bądź łudząca (odpowiednio wartości - 1, 0, -1).
-Występuje 1353 przykładowych danych. Przed rozpoczęciem pracy
-należy odfiltrować z niej posiadające klasę _podejrzany_,
-gdyż wykrycie anomalii polega na jednoznacznym stwierdzeniu,
-bez brania pod uwagę niepewności.
-
-Cechy danego adresu to:
-
-- czy użycie SFH nie wzbudza podejrzeń,
-- czy strona używa okna pop-up,
-- użycie SSL i wraz z oceną podmiotu wystawiającego certyfikat,
-- czy adres posiada długi opis żądania,
-- czy adres nie ma w sobie za dużo uchwytów (_anchor_),
-- czy ruch na podanej stronie jest odpowiednio duży (sprawdzony w zewnętrznej bazie Alexadatabase),
-- długość adresu,
-- wiek domeny,
-- użycie adresu IP w adresie,
-
 ### Phishing Websites
 [Phishing Websites][phishw] jest kolejnym zbiorem danych
 opisujących adresy, które mogą być związane z atakiem typu phishing.
