@@ -41,6 +41,8 @@ izolacji z użyciem podpróbek zbioru testowego. W następnym etapie algorytm pr
 przykłady testowe przez drzewa izolacji, aby uzyskać wynik anomalii dla każdego z nich.
 Sposobem wykrywania anomalii jest sortowanie przykładów według ich średniej długości ścieżki.
 Anomalie są przykładami, które znajdują się na górze listy.
+ 
+Długość ścieżki obliczana jest jako `e + c(T.size)`, gdzie _e_ to liczba krawędzi (przebytych od korzenia), a _c()_ to korekta, służąca do szacowania średniej długości ścieżki losowego drzewa podrzędnego, która mogłaby zostać skonstruowana przy użyciu danych o wielkości przekraczającej limit wysokości drzewa. Korekta _c($\psi$)_, średnia długość ścieżek od korzenia do liścia dla _$\psi$_ próbek, (obliczana jak nieudane przeszukiwanie drzewa binarnego) jest wykorzystywana do normalizacji stopnia anomalii. Normalizacja jest niezbędna do porównania długości ścieżek drzew zbudowanych na podzbiorach o różnej wielkości.
 
 
 ## Algorytmy wykorzystane do badań
