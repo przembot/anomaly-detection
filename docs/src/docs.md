@@ -33,7 +33,16 @@ długość ścieżki, czyli liczba krawędzi jakie należy przejść, by dojść
 (o ile przejście to nie przekracza zdefiniowanej maksymalnej wysokości drzewa). Przykłady o
 krótkiej ścieżce mają wysoką podatność, ponieważ obserwacje o wyróżniających się wartościach
 atrybutów mają większe szanse na oddzielenie w początkowej fazie procesu partycjonowania, a
-dodatkowo niewielka liczba anomalii powoduje mniejszą liczbę partycji. Długość ścieżki obliczana jest jako `e + c(T.size)`, gdzie _e_ to liczba krawędzi (przebytych od korzenia), a _c()_ to korekta, służąca do szacowania średniej długości ścieżki losowego drzewa podrzędnego, która mogłaby zostać skonstruowana przy użyciu danych o wielkości przekraczającej limit wysokości drzewa. Korekta _c($\psi$)_, średnia długość ścieżek od korzenia do liścia dla _$\psi$_ próbek, (obliczana jak nieudane przeszukiwanie drzewa binarnego) jest wykorzystywana do normalizacji stopnia anomalii. Normalizacja jest niezbędna do porównania długości ścieżek drzew zbudowanych na podzbiorach o różnej wielkości.
+dodatkowo niewielka liczba anomalii powoduje mniejszą liczbę partycji.
+Długość ścieżki obliczana jest jako `e + c(T.size)`, gdzie _e_ to liczba
+krawędzi (przebytych od korzenia), a _c()_ to korekta,
+służąca do szacowania średniej długości ścieżki losowego drzewa podrzędnego,
+która mogłaby zostać skonstruowana przy użyciu danych o wielkości
+przekraczającej limit wysokości drzewa. Korekta _c($\psi$)_,
+średnia długość ścieżek od korzenia do liścia dla _$\psi$_ próbek,
+(obliczana jak nieudane przeszukiwanie drzewa binarnego) jest wykorzystywana
+do normalizacji stopnia anomalii. Normalizacja jest niezbędna do porównania
+długości ścieżek drzew zbudowanych na podzbiorach o różnej wielkości.
 
 Wykrywanie anomalii na podstawie lasu izolacyjnego jest dwustopniowe.
 Pierwszy etap, uczenie, polega na budowie drzew
@@ -106,6 +115,7 @@ jako połączenie poprawne lub atak określonego typu. Zbiór posiada 42 atrybut
 wykorzystać losowe wybrane 100.000 próbek.
 
 Cechy pojedyńczego połączenia TCP:
+
 - czas trwania połączenia (w sekundach),
 - typ protokółu warstwy transportowej,
 - usługa sieciowa,
@@ -117,6 +127,7 @@ Cechy pojedyńczego połączenia TCP:
 - liczba pakietów z flagą URG.
 
 Cechy zawartości na podstawie domeny
+
 - liczba spełnionych "gorących" wskaźników,
 - liczba nieudanych prób logowania,
 - informacja o poprawnym logowaniu,
@@ -132,6 +143,7 @@ Cechy zawartości na podstawie domeny
 - informacja o zalogowaniu jako ,,gość''.
 
 Cechy ruchu sieciowego obliczone w dwu-sekundowym oknie czasowym
+
 - liczba połączeń do tej samej maszynie,
 - procent połączeń z błędami ,,SYN'',
 - procent połączeń z błędami ,,REJ'' (RST po próbie SYN),
