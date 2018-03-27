@@ -32,6 +32,7 @@ $(output)/%.pdf: $(source)/%.md
 		--variable geometry:a4paper \
 		--table-of-contents \
 		--number-sections \
+		-M date="`date "+%e.%m.%Y"`" \
 		-f markdown  $< \
 		-o $@
 

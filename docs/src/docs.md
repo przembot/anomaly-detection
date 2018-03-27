@@ -47,8 +47,8 @@ długości ścieżek drzew zbudowanych na podzbiorach o różnej wielkości.
 Wykrywanie anomalii na podstawie lasu izolacyjnego jest dwustopniowe.
 Pierwszy etap, uczenie, polega na budowie drzew
 izolacji z użyciem podzbioru danych testowych. W następnym etapie algorytm przekazuje
-przykłady testowe przez drzewa izolacji, aby uzyskać wynik anomalii dla każdego z nich.
-  `s(x,n) = 2 - $\frec{E(h(x))}{c(\psi)}$`
+przykłady testowe przez drzewa izolacji, aby uzyskać wynik anomalii dla każdego z nich:
+  $s(x,n) = 2 - \frac{E(h(x))}{c(\psi)}$
   gdzie E to średnia długość ścieżek dla kolejnych drzew.
 Wartości _s_ bliskie 1 oznaczają anomalię.
 
@@ -114,7 +114,7 @@ jako połączenie poprawne lub atak określonego typu. Zbiór posiada 42 atrybut
 łączna liczba instancji to 4.000.000, natomiast na rzecz projektu postanowiono
 wykorzystać losowe wybrane 100.000 próbek.
 
-Cechy pojedyńczego połączenia TCP:
+Cechy pojedynczego połączenia TCP:
 
 - czas trwania połączenia (w sekundach),
 - typ protokółu warstwy transportowej,
@@ -150,7 +150,7 @@ Cechy ruchu sieciowego obliczone w dwu-sekundowym oknie czasowym
 - procent połączeń do tej samej usługi,
 - procent połączeń do innych usług,
 - liczba połączeń do tej samej usługi,
-- analogicznie: procent połączeń z błędami ,,SYN'', ,,REJ'', do innncyh usług.
+- analogicznie: procent połączeń z błędami ,,SYN'', ,,REJ'', do innych usług.
 
 
 ### Phishing Websites
