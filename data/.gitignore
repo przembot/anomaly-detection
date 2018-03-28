@@ -1,0 +1,7 @@
+*.names
+*.train
+*.test
+*.arff
+*.gz
+*.data_10_percent
+*.unlabeled_10_percent
