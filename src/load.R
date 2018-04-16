@@ -5,7 +5,8 @@ library(farff)
 pwebsites = readARFF("data/PW.arff")
 
 # SPECT heart
-spect = read.csv(file="data/SPECT.test", header=FALSE)
+spectTrain = read.csv(file="data/SPECT.train", header=FALSE)
+spectTest = read.csv(file="data/SPECT.test", header=FALSE)
 
 # KDD Cup
 # TODO: assign names/labels?
