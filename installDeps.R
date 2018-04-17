@@ -1,3 +1,5 @@
+# This script installs all necessary dependencies
+
 # Data loading/parsing packages
 install.packages("farff")
 

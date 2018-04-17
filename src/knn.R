@@ -7,14 +7,36 @@ source("src/load.R")
 # SPECT DataSet
 
 # Move classification result to factor
-if(FALSE){
 
-  # from 'class' documentation
+cl <- factor(spectTrain[,1])
+trainSet <- spectTrain
+testSet <- spectTest
 
-  train <- rbind(iris3[1:25,,1], iris3[1:25,,2], iris3[1:25,,3])
-  test <- rbind(iris3[26:50,,1], iris3[26:50,,2], iris3[26:50,,3])
-  cl <- factor(c(rep("s",25), rep("c",25), rep("v",25)))
-  knn(train, test, cl, k = 3, prob=TRUE)
-  attributes(.Last.value)
+# remove column with labels
+trainSet[,1] <- NULL
+testSet[,1] <- NULL
 
-}
+# classify
+result <- knn(trainSet, testSet, cl, k = 1, prob=FALSE)
+
+# n = 1: 0.625
+# n = 3: 0.652
+# n = 5: 0.598
+quality <- mean(result == spectTest[,1])
+
+
+# Phishing Websites
+
+# TODO: split training/test set?
+
+cl <- factor(pwebsites[,31])
+trainSet <- pwebsites
+
+trainSet[,31] <- NULL
+
+result <- knn(trainSet, trainSet, cl, k = 5, prob=FALSE)
+
+# n = 1: 0.989
+# n = 3: 0.965
+# n = 5: 0.956
+quality <- mean(result == pwebsites[,31])
