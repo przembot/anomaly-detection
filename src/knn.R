@@ -4,6 +4,9 @@ library(class)
 # Load all the data..
 source("src/load.R")
 
+# Currently, training set is the model,
+# but this set can be reduced by 'condense'
+
 # SPECT DataSet
 
 # Move classification result to factor
@@ -40,3 +43,15 @@ result <- knn(trainSet, trainSet, cl, k = 5, prob=FALSE)
 # n = 3: 0.965
 # n = 5: 0.956
 quality <- mean(result == pwebsites[,31])
+
+
+# KDD CUP
+
+cl <- factor(kddcup[,42])
+trainSet <- kddcup
+trainSet[,42] <- NULL
+testSet <- kddcupTest
+testSet[,42] <- NULL
+
+result <- knn(trainSet, testSet, cl, k = 1, prob=FALSE)
+quality <- mean(result == kddcupTest[,42])

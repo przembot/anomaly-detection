@@ -3,7 +3,7 @@
 # KDD Cup
 wget http://archive.ics.uci.edu/ml/machine-learning-databases/kddcup99-mld/kddcup.names
 wget http://archive.ics.uci.edu/ml/machine-learning-databases/kddcup99-mld/kddcup.data_10_percent.gz
-wget http://archive.ics.uci.edu/ml/machine-learning-databases/kddcup99-mld/kddcup.testdata.unlabeled_10_percent.gz
+wget http://archive.ics.uci.edu/ml/machine-learning-databases/kddcup99-mld/corrected.gz
 gunzip *.gz
 
 # Phishing Websites

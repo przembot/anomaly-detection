@@ -1,6 +1,18 @@
 # Load all available data into R
 library(farff)
 
+# Utils
+
+# Given data frame and column number,
+# give each element in column unique numeric value
+factorize <- function(data, columnNumber) {
+  buffer <- factor(data[,columnNumber])
+  levels(buffer) <- 1:length(levels(buffer))
+  eval.parent(substitute(data[,columnNumber] <- buffer))
+}
+
+
+
 # Phishing websites
 # Last column has labels
 pwebsites = readARFF("data/PW.arff")
@@ -13,6 +25,18 @@ spectTest = read.csv(file="data/SPECT.test", header=FALSE)
 # KDD Cup
 # Last column has labels
 kddcup = read.csv(file="data/kddcup.data_10_percent", header=FALSE)
+kddcupTest = read.csv(file="data/corrected", header=FALSE)
 
+# factorize non-numeric columns
+factorize(kddcup, 2)
+factorize(kddcup, 3)
+factorize(kddcup, 4)
+factorize(kddcupTest, 2)
+factorize(kddcupTest, 3)
+factorize(kddcupTest, 4)
 
-# TODO: separate train/test sets to be used everywhere?
+# ignore attack kind
+# 0 - normal
+# 1 - abnormal
+kddcup[,42] = kddcup[,42] != 'normal.'
+kddcupTest[,42] = kddcupTest[,42] != 'normal.'
