@@ -7,7 +7,7 @@ source("src/load.R")
 # Currently, training set is the model,
 # but this set can be reduced by 'condense'
 
-# SPECT DataSet
+# SPECT
 
 # Move classification result to factor
 

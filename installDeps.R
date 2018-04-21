@@ -7,3 +7,6 @@ install.packages("farff")
 
 # k-nn
 install.packages("class")
+
+# SVM
+install.packages("e1071")
