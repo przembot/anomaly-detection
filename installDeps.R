@@ -10,3 +10,6 @@ install.packages("class")
 
 # SVM
 install.packages("e1071")
+
+# LOF
+install.packages("DMwR2")
