@@ -1,5 +1,5 @@
 ---
-title: "Projekt MOW - wstępne założenia"
+title: "Projekt MOW - dokumentacja projektu"
 author:
   - Kamila Lis
   - Przemysław Kopański
@@ -256,8 +256,30 @@ Dopuszczamy również możliwość ograniczenia liczby atrybutów, jeżeli
 nie będziemy w stanie obsłużyć tak dużej ilości atrybutów.
 
 
-# Bibliografia
+# Część praktyczna
 
+Ta część dokumentacji opisuje działania podjęte po oddaniu wstępnej dokumentacji,
+będącej powyżej.
+
+## Zmiana algorytmu porównawnczego
+
+LOF -> random forest
+opis random forest wraz z jego parametrami
+
+## Uzyskane wyniki
+
+### k-NN
+
+### SVM
+
+### random forest
+
+### iForest
+
+## Wnioski z wyników
+
+
+# Bibliografia
 
 [dataset]: https://archive.ics.uci.edu/ml/datasets/SPECT+Heart "SPECT Heart"
 [wphish]: https://archive.ics.uci.edu/ml/datasets/Website+Phishing
