@@ -89,6 +89,10 @@ Jednoklasowość polega tutaj na klasyfikacji przykładu do klasy
 odpowiadającej typowemu punktowi, a nie przydzielenie
 do tej klasy oznaczać będzie, że punkt jest anomalią.
 
+### Random Forest - las losowy
+
+Działanie lasów losowych polega na klasyfikacji za pomoca grupy drzew decyzyjnych. Końcowa decyzja jest podejmowana w wyniku
+głosowania większościowego nad klasami wskazanymi przez poszczególne drzewa decyzyjne. Każde z drzew konstruowane jest przez wylosowanie ze zwracaniem _N_ obiektów z zbioru uczącego o liczności _N_. W każdym węźle podział jest dokonywany jedynie na podstawie _k_ losowo wybranych cech. Ich liczba jest znacznie mniejsza od liczby wszystkich cech. Dzięki tej własności lasy losowe mogą być stosowane w problemach o dużej liczbie cech.
 
 # Plan badań
 
@@ -220,6 +224,9 @@ który ma znaczenie jak w przypadku algorytmu k-NN.
 ### SVM
 Do uruchomienia algorytmu SVM należy podać typ wykorzystywanego jądra
 (np. Gaussowskiej) oraz jego odpowiednie parametry.
+
+### Las losowy
+_ntree_ -- liczba drzew
 
 ### Las izolacji
 Parametry etapu uczenia:
