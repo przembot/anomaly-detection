@@ -4,33 +4,105 @@ library(caret)
 # Load all the data..
 source("src/load.R")
 
-# SPECT
+## SPECT
 spectTrain$V1 = as.factor(spectTrain$V1)
-model <- svm(V1 ~ ., 
-             data=spectTrain,
-             type='one-classification',
-             nu=0.5,
-             scale=TRUE,
-             kernel="radial")
-summary(model)
-spectTest$svm_pred <- predict(model, spectTest)
+spect_model <- svm(V1 ~ ., 
+                   data=spectTrain,
+                   type='one-classification',
+                   nu=0.5,
+                   scale=TRUE,
+                   kernel="radial")
+summary(spect_model)
+spectTest$svm_pred <- predict(spect_model, spectTest)
 confusionMatrix(data = as.factor(as.numeric(!spectTest$svm_pred)),
-                reference = as.factor(spectTest$V1))
-quality <- mean(as.factor(as.numeric(!spectTest$svm_pred)) == as.factor(spectTest$V1))
+                                 reference = as.factor(spectTest$V1))
+spect_model.quality <- mean(as.factor(as.numeric(!spectTest$svm_pred)) == as.factor(spectTest$V1))
 # 0.8181818
 
 
-trainSet <- spectTrain
-# keep 'normal' values for training
-# trainSet <- subset(trainSet, V1==0)
-cl <- trainSet[,1]
-trainSet[,1] <- NULL
-testSet <- spectTest
-clTest <- testSet[,1]
-testSet[,1] <- NULL
-# TODO: verify one-classification type
-modelSpect <- svm(trainSet, cl, type='C-classification', kernel='linear')
+## PHISHIHG Websites
+#pwebsites$Result = as.factor(pwebsites$Result)
+# split the data sample into train and test samples
+sample.ind <- sample(2, 
+                     nrow(pwebsites),
+                     replace = TRUE,
+                     prob = c(0.4,0.6))
+pwebsitesTrain <- pwebsites[sample.ind==1,]
+pwebsitesTest <- pwebsites[sample.ind==2,]
+table(pwebsitesTrain$Result)/nrow(pwebsitesTrain)
+table(pwebsitesTest$Result)/nrow(pwebsitesTest)
+# svm
+pwebsites_model <- svm(Result ~ ., 
+                   data=pwebsitesTrain,
+                   type='one-classification',
+                   nu=0.5,
+                   scale=TRUE,
+                   kernel="radial")
+summary(pwebsites_model)
+pwebsitesTest$svm_pred <- as.numeric(predict(pwebsites_model, pwebsitesTest))
+pwebsitesTest$svm_pred[pwebsitesTest$svm_pred==0] <- -1
+confusionMatrix(data = as.factor(as.numeric(pwebsitesTest$svm_pred)),
+                reference = as.factor(pwebsitesTest$Result))
+pwebsites_model.quality <- mean(as.factor(as.numeric(pwebsitesTest$svm_pred)) == as.factor(pwebsitesTest$Result))
+# 0.5062855
 
-pred <- predict(modelSpect, testSet)
-# table(pred, clTest)
-quality <- mean(pred == clTest)
+
+
+## KDD CUP
+# nie wiem czy losowanie to najszczesliwszy pomysl
+kddcupTrain <- kddcup[sample(1:nrow(kddcup), 8000,
+                      replace=FALSE),] 
+cl <- kddcupTrain$V42
+kddcupTrain <- subset(kddcupTrain, select=-V42)
+table(cl)/nrow(kddcupTrain)
+
+# zakladajac, ze bierzemy pierwsze 8000
+kddcupTrain <- head(kddcup, 8000)
+cl <- kddcupTrain$V42
+kddcupTrain <- subset(kddcupTrain, select=-V42)
+table(cl)/nrow(kddcupTrain)
+
+tune.svm(kddcupTrain,
+         cl,
+         type="one-classification",
+         kernel="radial",
+         cost=seq(.5,2.5,.5),
+         cachesize=100,
+         cross=10,
+         gamma=1/8)
+
+#- sampling method: 10-fold cross validation 
+# - best parameters:
+#   gamma cost
+# 0.125  0.5
+# - best performance: 0.460625 
+
+kddcup_model <- svm(kddcupTrain,
+                    cl,
+                    type='one-classification',
+                    scale=FALSE,
+                    kernel="radial")
+summary(kddcup_model)
+
+kddTest <- head(kddcupTest, 30000)
+kddTest$svm_pred <- predict(kddcup_model, kddTest[,-42])
+table(kddTest$svm_pred, kddTest$V42)
+kddcup_model.quality <- mean(kddTest$svm_pred == kddTest$V42)
+
+
+
+# 
+# trainSet <- spectTrain
+# # keep 'normal' values for training
+# # trainSet <- subset(trainSet, V1==0)
+# cl <- trainSet[,1]
+# trainSet[,1] <- NULL
+# testSet <- spectTest
+# clTest <- testSet[,1]
+# testSet[,1] <- NULL
+# # TODO: verify one-classification type
+# modelSpect <- svm(trainSet, cl, type='C-classification', kernel='linear')
+# 
+# pred <- predict(modelSpect, testSet)
+# # table(pred, clTest)
+# quality <- mean(pred == clTest)
