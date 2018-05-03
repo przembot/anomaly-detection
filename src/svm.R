@@ -49,20 +49,13 @@ pwebsites_model.quality <- mean(as.factor(as.numeric(pwebsitesTest$svm_pred)) ==
 
 
 ## KDD CUP
-# nie wiem czy losowanie to najszczesliwszy pomysl
-kddcupTrain <- kddcup[sample(1:nrow(kddcup), 8000,
-                      replace=FALSE),] 
-cl <- kddcupTrain$V42
-kddcupTrain <- subset(kddcupTrain, select=-V42)
-table(cl)/nrow(kddcupTrain)
+trainSet <- kddcup
+testSet <- kddcupTest
+cl <- trainSet$V42
+trainSet <- subset(trainSet, select=-V42)
+table(cl)/nrow(trainSet)
 
-# zakladajac, ze bierzemy pierwsze 8000
-kddcupTrain <- head(kddcup, 8000)
-cl <- kddcupTrain$V42
-kddcupTrain <- subset(kddcupTrain, select=-V42)
-table(cl)/nrow(kddcupTrain)
-
-tune.svm(kddcupTrain,
+tune.svm(trainSet,
          cl,
          type="one-classification",
          kernel="radial",
@@ -77,17 +70,16 @@ tune.svm(kddcupTrain,
 # 0.125  0.5
 # - best performance: 0.460625 
 
-kddcup_model <- svm(kddcupTrain,
+kddcup_model <- svm(trainSet,
                     cl,
                     type='one-classification',
                     scale=FALSE,
                     kernel="radial")
 summary(kddcup_model)
 
-kddTest <- head(kddcupTest, 30000)
-kddTest$svm_pred <- predict(kddcup_model, kddTest[,-42])
-table(kddTest$svm_pred, kddTest$V42)
-kddcup_model.quality <- mean(kddTest$svm_pred == kddTest$V42)
+testSet$svm_pred <- predict(kddcup_model, testSet[,-42])
+table(testSet$svm_pred, testSet$V42)
+kddcup_model.quality <- mean(testSet$svm_pred == testSet$V42)
 
 
 

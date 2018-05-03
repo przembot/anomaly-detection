@@ -68,6 +68,10 @@ testSet <- kddcupTest
 trainSet$V42 = as.factor(trainSet$V42)
 testSet$V42 = as.factor(testSet$V42)
 
+# to avoid error: Can not handle categorical predictors with more than 53 categories.
+# V3 : Factor w/ 66 levels
+trainSet$V3 = as.numeric(as.character(trainSet$V3))
+
 # Build the model
 model<-randomForest(V42 ~ .,
                     data=trainSet,
