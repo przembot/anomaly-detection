@@ -13,3 +13,7 @@ install.packages("e1071")
 
 # LOF
 install.packages("DMwR2")
+install.packages("Rlof")
+
+# iForest
+install.packages("data.tree")
