@@ -21,17 +21,6 @@ spect_model.quality <- mean(as.factor(as.numeric(!spectTest$svm_pred)) == as.fac
 
 
 ## PHISHIHG Websites
-#pwebsites$Result = as.factor(pwebsites$Result)
-# split the data sample into train and test samples
-sample.ind <- sample(2, 
-                     nrow(pwebsites),
-                     replace = TRUE,
-                     prob = c(0.4,0.6))
-pwebsitesTrain <- pwebsites[sample.ind==1,]
-pwebsitesTest <- pwebsites[sample.ind==2,]
-table(pwebsitesTrain$Result)/nrow(pwebsitesTrain)
-table(pwebsitesTest$Result)/nrow(pwebsitesTest)
-# svm
 pwebsites_model <- svm(Result ~ ., 
                    data=pwebsitesTrain,
                    type='one-classification',
