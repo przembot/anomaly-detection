@@ -22,7 +22,7 @@ Bardziej szczegółowa interpretacja projektu została opisana w rozdziale trzec
 # Opis algorytmów
 
 
-## Algorytm implementowany
+## Algorytm implementowany - las izolacji
 Detekcja anomalii z wykorzystaniem lasu izolacji (_iForest_) polega na separacji próbki na
 podstawie zmierzonego stopnia podatności na izolację. W tym celu metoda wykorzystuje właściwości
 anomalii - ich niewielką liczebność oraz znacząco różniące się wartości atrybutów.
@@ -222,11 +222,18 @@ W algorytmie _LOF_ wykorzystywany jest parametr _k_
 który ma znaczenie jak w przypadku algorytmu k-NN.
 
 ### SVM
-Do uruchomienia algorytmu SVM należy podać typ wykorzystywanego jądra
-(np. Gaussowskiej) oraz jego odpowiednie parametry.
+Do uruchomienia algorytmu SVM należy podać:
+* typ (klasyfikacja / regresja / wykrywanie anomalii (klasyfikacja jednoklasowa))
+* funkcja jądrowa (liniowa / wielomianowa / radialna funkcja bazowa / funkcja sigmoidalna )
+* parametry
+    - gamma - definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg),
+    - nu - jest górną granicą przykładów treningowych w stosunku do ich całkowitej liczby (przykładowo, wartość 0.05 gwarantuje, że co najwyżej 5% przykładów treningowych będzie niepoprawnie zaklasyfikowanych (w skutek małego marginesu) i conajmniej 5% przykładów treningowych będzie wektorami nośnymi).
+
+TODO: opis strojenia -> wykorzystanie tune.svm
 
 ### Las losowy
-_ntree_ -- liczba drzew
+Parametry etapu uczenia:
+* liczba drzew _ntree_
 
 ### Las izolacji
 Parametry etapu uczenia:
