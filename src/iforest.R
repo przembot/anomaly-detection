@@ -71,7 +71,7 @@ iTree = function(root, trainLabels, trainData, currentSize, limit) {
       #splitPoint <- sampleWithoutSurprises(levels(columnDomain))
       splitPoint <- runif(1, min(trainData[,selectedQ]), max(trainData[,selectedQ]))
     
-      # filter data sets
+      # filters of data sets
       leftFilter <- which(trainData[,selectedQ] < splitPoint)
       rightFilter <- which(trainData[,selectedQ] >= splitPoint)
     
@@ -112,7 +112,41 @@ testModel = function() {
   set.seed(1337)
   spectLabels <- spectTrain$V1
   spectData <- spectTrain[,!names(spectTrain) == "V1"]
-  iforestModelGen(spectLabels, spectData, 2, 16)
+  model <- iforestModelGen(spectLabels, spectData, 2, 16)
+  print(model)
+  
+  # choose first generated tree for example path length calculation
+  randomITree <- model[[1]]
+  sample <- spectTest[1, , drop=FALSE]
+  sampleNoLabel <- sample[,!names(spectTrain) == "V1"]
+  pathLength(randomITree, sampleNoLabel, 4, 0)
+}
+
+# @param tree - iTree
+# @param sample - data sample
+# @param limit - search depth limit
+# @param e - current depth (start with 0)
+# @return path length - as defined in paper
+pathLength = function(node, sample, limit, e) {
+  if (node$type == "external" || e >= limit) {
+    # TODO: get Equation 1 function
+    e + node$size
+  } else {
+    attrName <- node$splitAtt
+    splitVal <- node$splitVal
+    x <- sample[,attrName]
+    
+    # use for debugging tree traversal
+    # print(cat("attrName", attrName, "splitVal", splitVal, "x_sample", x))
+    
+    if (x < splitVal) {
+      # go left
+      pathLength(node$children[[1]], sample, limit, e+1)
+    } else {
+      # go right
+      pathLength(node$children[[2]], sample, limit, e+1)
+    }
+  }
 }
 
 # check if values in given column
@@ -120,13 +154,4 @@ testModel = function() {
 attrSplitsData = function (data, attrName) {
   colData <- data[,attrName]
   min(colData) != max(colData)
-}
-
-# due to R nature, this is required..
-sampleWithoutSurprises <- function(x) {
-  if (length(x) <= 1) {
-    return(x)
-  } else {
-    return(sample(x, 1))
-  }
 }
