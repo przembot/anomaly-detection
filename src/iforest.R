@@ -40,48 +40,59 @@ iTree = function(root, trainLabels, trainData, currentSize, limit) {
   # or no data available to split
   # tricky way - because ncol of no col data frame returns null
   if (currentSize >= limit || is.null(ncol(trainData)) 
-      || nrow(trainData) == 0) {
+      || nrow(trainData) <= 1) {
     root$type = "external"
-    root$size = nrow(trainLabels)
+    root$size = nrow(trainData)
   } else {
-    # choose attribute randomly
-    # TODO: choose attribute randomly with wages according
-    #       to its entropy?
     # attribute list
     Q <- names(trainData)
-    selectedQ <- sampleWithoutSurprises(Q)
-    # TODO: don't choose attribute which doesn't split the data
-    #       (don't choose if every element in data has the same
-    #        value of that attribute)
     
-    # choose split point randomly
-    # NOTE: assuming every attribute values can be compared
-    #columnDomain <- as.factor(trainData[,selectedQ])
-    #splitPoint <- sampleWithoutSurprises(levels(columnDomain))
-    print(trainData[,selectedQ])
-    splitPoint <- runif(1, min(trainData[,selectedQ]), max(trainData[,selectedQ]))
+    # choose attribute randomly
+    # possible enhancement? - choose attribute 
+    # randomly with wages according to its entropy?
+    randomPerm <- sample(Q)
+    selectedQ <- NULL
+    for (attrName in randomPerm) {
+      if (attrSplitsData(trainData, attrName)) {
+        selectedQ <- attrName
+        break()
+      }
+    }
     
+    # if data is already divided, create external node
+    if (is.null(selectedQ)) {
+      root$type = "external"
+      root$size = nrow(trainData)
+    } else {
+    
+      # choose split point randomly
+      # NOTE: assuming every attribute values can be compared
+      #columnDomain <- as.factor(trainData[,selectedQ])
+      #splitPoint <- sampleWithoutSurprises(levels(columnDomain))
+      splitPoint <- runif(1, min(trainData[,selectedQ]), max(trainData[,selectedQ]))
+    
+      # filter data sets
+      leftFilter <- which(trainData[,selectedQ] < splitPoint)
+      rightFilter <- which(trainData[,selectedQ] >= splitPoint)
+    
+      # remove given attribute from dataset
+      # NOTE: assuming data frame can exists without any column
+      trainData <- trainData[ ,!names(trainData) == selectedQ, drop=FALSE]
+    
+      # construct node and recursive call
+      root$type = "internal"
+      root$splitAtt = selectedQ
+      root$splitVal = splitPoint
+    
+      # convencion: first child is left, second is right
+      leftChild <- root$AddChild("Left")
+      rightChild <- root$AddChild("Right")
 
-    # filter data sets
-    leftFilter <- which(trainData[,selectedQ] < splitPoint)
-    rightFilter <- which(trainData[,selectedQ] >= splitPoint)
-    
-    # remove given attribute from dataset
-    # NOTE: assuming data frame can exists without any column
-    trainData <- trainData[ ,!names(trainData) == selectedQ, drop=FALSE]
-    
-    # construct node and recursive call
-    root$type = "internal"
-    root$splitAtt = selectedQ
-    root$splitVal = splitPoint
-    
-    # convencion: first child is left, second is right
-    leftChild <- root$AddChild("Left")
-    rightChild <- root$AddChild("Right")
-    iTree(leftChild, trainLabels[leftFilter], trainData[leftFilter,]
-         , currentSize+1, limit)
-    iTree(rightChild, trainLabels[rightFilter], trainData[rightFilter,]
-         , currentSize+1, limit)
+      iTree(leftChild, trainLabels[leftFilter], trainData[leftFilter,]
+           , currentSize+1, limit)
+      iTree(rightChild, trainLabels[rightFilter], trainData[rightFilter,]
+           , currentSize+1, limit)
+    }
   }
 }
 
@@ -91,7 +102,7 @@ predict.iforestModel = function(model, newdata) {
 
 print.iforestModel = function(model) {
   for (tree in model) {
-    print(tree, "splitAtt", "splitVal")
+    print(tree, "splitAtt", "splitVal", "size")
   }
 }
 
@@ -102,6 +113,13 @@ testModel = function() {
   spectLabels <- spectTrain$V1
   spectData <- spectTrain[,!names(spectTrain) == "V1"]
   iforestModelGen(spectLabels, spectData, 2, 16)
+}
+
+# check if values in given column
+# have only one value
+attrSplitsData = function (data, attrName) {
+  colData <- data[,attrName]
+  min(colData) != max(colData)
 }
 
 # due to R nature, this is required..
