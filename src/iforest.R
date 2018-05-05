@@ -2,20 +2,24 @@
 library(data.tree)
 
 
-iforestModelGen = function(trainLabels, trainData, treeNum, chi) {
+iforestModelGen = function(trainData, treeNum, chi) {
   # forest as set of trees
   forest <- list()
+  maxTreeSize <- ceiling(log2(chi))
   for (i in 1:treeNum) {
     filterVector <- sample(1:nrow(trainData), chi, replace = FALSE)
     filteredData <- trainData[filterVector,]
-    filteredDataLabels <- trainLabels[filterVector]
 
-    maxTreeSize <- ceiling(log2(chi))
     rootNode <- Node$new("Root")
-    iTree(rootNode, filteredDataLabels, filteredData, 0, maxTreeSize)
+    iTree(rootNode, filteredData, 0, maxTreeSize)
     forest <- c(forest, rootNode)
   }
-  model = structure(forest, class="iforestModel")
+  model <- NULL
+  model$chi = chi
+  model$n = nrow(trainData)
+  model$limit = maxTreeSize
+  model$iforest = forest
+  class(model) <- "iforestModel"
   return(model)
 }
 
@@ -32,10 +36,9 @@ iforestModelGen = function(trainLabels, trainData, treeNum, chi) {
 
 # generate iTree with given data
 # It's procedure that contructs tree with given root node
-# @param trainLabels - vector of labels of given trainData
 # @param trainData - training set, with attributes
 # @param root - node, which should be now modified
-iTree = function(root, trainLabels, trainData, currentSize, limit) {
+iTree = function(root, trainData, currentSize, limit) {
   # current stop criterium - no attribute that could be split
   # or no data available to split
   # tricky way - because ncol of no col data frame returns null
@@ -88,65 +91,77 @@ iTree = function(root, trainLabels, trainData, currentSize, limit) {
       leftChild <- root$AddChild("Left")
       rightChild <- root$AddChild("Right")
 
-      iTree(leftChild, trainLabels[leftFilter], trainData[leftFilter,]
+      iTree(leftChild, trainData[leftFilter,]
            , currentSize+1, limit)
-      iTree(rightChild, trainLabels[rightFilter], trainData[rightFilter,]
+      iTree(rightChild, trainData[rightFilter,]
            , currentSize+1, limit)
     }
   }
 }
 
+# @return vector of booleans, where true means anomaly
 predict.iforestModel = function(model, newdata) {
+  apply(newdata, 1, function(sample) {
+    anomalyScore(model, sample) > 0.5
+  })
+}
+
+
+anomalyScore = function(model, sample) {
+  # evaluate path lengths in all trees in model
+  pathlengths <- sapply(model$iforest, function(itree) {
+    pathLength(itree, sample, model$chi, model$limit, 0)
+  })
   
+  2^(-mean(pathlengths)/cFunc(model$chi, model$chi))
 }
 
 print.iforestModel = function(model) {
-  for (tree in model) {
+  for (tree in model$iforest) {
     print(tree, "splitAtt", "splitVal", "size")
   }
 }
 
-
-# Sample usage of iForest implementation
-testModel = function() {
-  set.seed(1337)
-  spectLabels <- spectTrain$V1
-  spectData <- spectTrain[,!names(spectTrain) == "V1"]
-  model <- iforestModelGen(spectLabels, spectData, 2, 16)
-  print(model)
-  
-  # choose first generated tree for example path length calculation
-  randomITree <- model[[1]]
-  sample <- spectTest[1, , drop=FALSE]
-  sampleNoLabel <- sample[,!names(spectTrain) == "V1"]
-  pathLength(randomITree, sampleNoLabel, 4, 0)
-}
 
 # @param tree - iTree
 # @param sample - data sample
 # @param limit - search depth limit
 # @param e - current depth (start with 0)
 # @return path length - as defined in paper
-pathLength = function(node, sample, limit, e) {
+pathLength = function(node, sample, chi, limit, e) {
+  # second condition should not be ever met - as tree
+  # size is cut according to chi variable
   if (node$type == "external" || e >= limit) {
-    # TODO: get Equation 1 function
-    e + node$size
+    e + cFunc(chi, node$size)
   } else {
     attrName <- node$splitAtt
     splitVal <- node$splitVal
-    x <- sample[,attrName]
-    
-    # use for debugging tree traversal
-    # print(cat("attrName", attrName, "splitVal", splitVal, "x_sample", x))
+    x <- sample[attrName]
     
     if (x < splitVal) {
       # go left
-      pathLength(node$children[[1]], sample, limit, e+1)
+      pathLength(node$children[[1]], sample, chi, limit, e+1)
     } else {
       # go right
-      pathLength(node$children[[2]], sample, limit, e+1)
+      pathLength(node$children[[2]], sample, chi, limit, e+1)
     }
   }
+}
+
+# c function from Equation 1 from paper
+cFunc = function(chi, n) {
+  if (chi > 2) {
+    2*harmNumber(chi-1) - 2*(chi-1)/n
+  } else if (chi == 2) {
+    1
+  } else {
+    0
+  }
+}
+
+# Harmonic number
+harmNumber = function(x) {
+  log(x)+0.5772156649
 }
 
 # check if values in given column
@@ -154,4 +169,28 @@ pathLength = function(node, sample, limit, e) {
 attrSplitsData = function (data, attrName) {
   colData <- data[,attrName]
   min(colData) != max(colData)
+}
+
+
+# Example usage of iForest implementation
+exampleUsage = function() {
+  # for deterministic testing, set const seed
+  #set.seed(1337)
+  
+  # dataset for training - without labels
+  spectData <- spectTrain[,!names(spectTrain) == "V1"]
+  
+  # parameters for model are - dataset, number of trees, chi variable
+  model <- iforestModelGen(spectData, 10, 16)
+  print(model)
+  
+  # remove labels from test data
+  spectTestData <- spectTest[,!names(spectTest) == "V1"]
+  # but keep them to evaluate quality
+  spectTestLabels <- spectTest$V1
+  
+  # prediction - true if anomaly, false otherwise
+  predictionResult <- predict(model, spectTestData)
+  
+  mean(spectTestLabels == predictionResult)
 }
