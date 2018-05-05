@@ -2,7 +2,12 @@
 library(data.tree)
 
 
-iforestModelGen = function(trainData, treeNum, chi) {
+# @param trainData - training data without labels
+# @param treeNum - number of iTrees in iForest
+# @param chi - subsampling size
+# @param threshold - activation treshold of anomaly score
+#                    (set greater than 0.5)
+iforestModelGen = function(trainData, treeNum, chi, threshold) {
   # forest as set of trees
   forest <- list()
   maxTreeSize <- ceiling(log2(chi))
@@ -19,6 +24,7 @@ iforestModelGen = function(trainData, treeNum, chi) {
   model$n = nrow(trainData)
   model$limit = maxTreeSize
   model$iforest = forest
+  model$threshold = threshold
   class(model) <- "iforestModel"
   return(model)
 }
@@ -102,7 +108,8 @@ iTree = function(root, trainData, currentSize, limit) {
 # @return vector of booleans, where true means anomaly
 predict.iforestModel = function(model, newdata) {
   apply(newdata, 1, function(sample) {
-    anomalyScore(model, sample) > 0.5
+    #print(anomalyScore(model, sample))
+    anomalyScore(model, sample) > model$threshold
   })
 }
 
@@ -113,7 +120,7 @@ anomalyScore = function(model, sample) {
     pathLength(itree, sample, model$chi, model$limit, 0)
   })
   
-  2^(-mean(pathlengths)/cFunc(model$chi, model$chi))
+  2^(-mean(pathlengths)/cFunc(model$chi))
 }
 
 print.iforestModel = function(model) {
@@ -132,7 +139,7 @@ pathLength = function(node, sample, chi, limit, e) {
   # second condition should not be ever met - as tree
   # size is cut according to chi variable
   if (node$type == "external" || e >= limit) {
-    e + cFunc(chi, node$size)
+    e + cFunc(node$size)
   } else {
     attrName <- node$splitAtt
     splitVal <- node$splitVal
@@ -149,10 +156,10 @@ pathLength = function(node, sample, chi, limit, e) {
 }
 
 # c function from Equation 1 from paper
-cFunc = function(chi, n) {
-  if (chi > 2) {
-    2*harmNumber(chi-1) - 2*(chi-1)/n
-  } else if (chi == 2) {
+cFunc = function(n) {
+  if (n > 2) {
+    2*harmNumber(n-1) - 2*(n-1)/n
+  } else if (n == 2) {
     1
   } else {
     0
@@ -175,19 +182,26 @@ attrSplitsData = function (data, attrName) {
 # Example usage of iForest implementation
 exampleUsage = function() {
   # for deterministic testing, set const seed
-  #set.seed(1337)
+  set.seed(1337)
   
   # dataset for training - without labels
-  spectData <- spectTrain[,!names(spectTrain) == "V1"]
+  # using only samples which are 'normal'
+  spectData <- spectTrain[which(spectTrain[,"V1"] == 1),]
+  #spectData <- spectTrain
+  spectData <- spectData[,!names(spectData) == "V1"]
   
-  # parameters for model are - dataset, number of trees, chi variable
-  model <- iforestModelGen(spectData, 10, 16)
-  print(model)
+  # parameters for model are - dataset, number of trees, chi variable, threshold
+  model <- iforestModelGen(spectData, 50, 32, 0.65)
+  # print all trees
+  #print(model)
   
   # remove labels from test data
   spectTestData <- spectTest[,!names(spectTest) == "V1"]
   # but keep them to evaluate quality
   spectTestLabels <- spectTest$V1
+  # and also swap 1 with 0, because anomaly is labeled as 0
+  # in spect data set
+  spectTestLabels <- spectTestLabels == 0
   
   # prediction - true if anomaly, false otherwise
   predictionResult <- predict(model, spectTestData)
