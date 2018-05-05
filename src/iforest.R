@@ -1,6 +1,6 @@
 # iForest algorithm implementation
 library(data.tree)
-
+library(caret)
 
 # @param trainData - training data without labels
 # @param treeNum - number of iTrees in iForest
@@ -206,5 +206,6 @@ exampleUsage = function() {
   # prediction - true if anomaly, false otherwise
   predictionResult <- predict(model, spectTestData)
   
-  mean(spectTestLabels == predictionResult)
+  confusionMatrix(as.factor(spectTestLabels)
+                 ,as.factor(predictionResult))
 }
