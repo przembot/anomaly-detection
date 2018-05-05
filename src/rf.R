@@ -2,6 +2,8 @@ library(randomForest)
 library(e1071)
 library(caret)
 
+library(pROC)
+
 # Data Preparation
 source("src/load.R")
 
@@ -36,6 +38,10 @@ confusionMatrix(data = spectTest$pred_randomforest,
 quality <- mean(spectTest$pred_randomforest == spectTest$V1)
 # train: 0.9375
 # test: 0.7754011
+plot(roc(response = spectTest$V1,
+         predictor = as.numeric(as.character(spectTest$pred_randomforest)),
+         direction="<"),
+     main="ROC")
 
 
 ## PHISHING
