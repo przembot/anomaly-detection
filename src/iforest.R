@@ -210,6 +210,10 @@ evaluate = function(trainData, testData, testDataLabels, treeNum, chi, firstplot
                 predictor = prediction,
                 percent=TRUE)
 
+  # print the best threshold for given parameters
+  cat("treeNum:",treeNum,"chi:",chi,"\n")
+  print(coords(rocObj, "best"))
+
   plot(rocObj,
        add=!firstplot,
        grid=TRUE,
