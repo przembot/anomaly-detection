@@ -3,6 +3,9 @@
 # Data loading/parsing packages
 install.packages("farff")
 
+# Plot drawing packages
+install.packages("pROC")
+
 # Data mining packages
 
 # k-nn

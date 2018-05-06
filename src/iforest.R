@@ -2,12 +2,12 @@
 library(data.tree)
 library(caret)
 
+library(pROC)
+
 # @param trainData - training data without labels
 # @param treeNum - number of iTrees in iForest
 # @param chi - subsampling size
-# @param threshold - activation treshold of anomaly score
-#                    (set greater than 0.5)
-iforestModelGen = function(trainData, treeNum, chi, threshold) {
+iforestModelGen = function(trainData, treeNum, chi) {
   # forest as set of trees
   forest <- list()
   maxTreeSize <- ceiling(log2(chi))
@@ -24,7 +24,6 @@ iforestModelGen = function(trainData, treeNum, chi, threshold) {
   model$n = nrow(trainData)
   model$limit = maxTreeSize
   model$iforest = forest
-  model$threshold = threshold
   class(model) <- "iforestModel"
   return(model)
 }
@@ -108,8 +107,7 @@ iTree = function(root, trainData, currentSize, limit) {
 # @return vector of booleans, where true means anomaly
 predict.iforestModel = function(model, newdata) {
   apply(newdata, 1, function(sample) {
-    #print(anomalyScore(model, sample))
-    anomalyScore(model, sample) > model$threshold
+    anomalyScore(model, sample) # > model$threshold
   })
 }
 
@@ -179,33 +177,63 @@ attrSplitsData = function (data, attrName) {
 }
 
 
-# Example usage of iForest implementation
-exampleUsage = function() {
-  # for deterministic testing, set const seed
-  set.seed(1337)
+roundDown = function(x) {
+  2^floor(log2(x))
+}
+
+# @param trainData - training data without labels
+# @param testData - test data without labels
+# @param testDataLabels - vector of test data labels
+# Generates ROC curves plot
+generateRaport = function(trainData, testData, testDataLabels) {
+  treeNums = c(10, 20, 30)
+  sizeTrain = nrow(trainData)
+  chiVals = sapply(c(sizeTrain, sizeTrain/2), roundDown)
+  lineColors = rainbow(length(treeNums)*length(chiVals))
   
-  # dataset for training - without labels
-  # using only samples which are 'normal'
+  for (i in 1:length(treeNums)) {
+    for (j in 1:length(chiVals)) {
+      evaluate(trainData, testData, testDataLabels, treeNums[[i]], chiVals[[j]],
+               i==1&&j==1, lineColors[[(i-1)*length(chiVals)+j]])
+    }
+  }
+}
+
+# @param firstplot - boolean, true when it's time to create plot
+# @param color - color of the curve
+evaluate = function(trainData, testData, testDataLabels, treeNum, chi, firstplot, color) {
+  model <- iforestModelGen(trainData, treeNum, chi)
+
+  prediction <- predict(model, testData)
+
+  rocObj <- roc(response = testDataLabels,
+                predictor = prediction,
+                percent=TRUE)
+
+  plot(rocObj,
+       add=!firstplot,
+       grid=TRUE,
+       col=color,
+       # increase precision
+       print.thres.pattern="%.3f (%.1f%%, %.1f%%)",
+       print.thres="best",
+       main="ROC curves")
+}
+
+main = function() {
+  # data preparation
+
+  # training set
   spectData <- spectTrain[which(spectTrain[,"V1"] == 1),]
-  #spectData <- spectTrain
   spectData <- spectData[,!names(spectData) == "V1"]
   
-  # parameters for model are - dataset, number of trees, chi variable, threshold
-  model <- iforestModelGen(spectData, 50, 32, 0.65)
-  # print all trees
-  #print(model)
-  
-  # remove labels from test data
+  # test set
   spectTestData <- spectTest[,!names(spectTest) == "V1"]
-  # but keep them to evaluate quality
   spectTestLabels <- spectTest$V1
   # and also swap 1 with 0, because anomaly is labeled as 0
   # in spect data set
   spectTestLabels <- spectTestLabels == 0
   
-  # prediction - true if anomaly, false otherwise
-  predictionResult <- predict(model, spectTestData)
-  
-  confusionMatrix(as.factor(spectTestLabels)
-                 ,as.factor(predictionResult))
+  #set.seed(1337)
+  generateRaport(spectData, spectTestData, spectTestLabels)
 }
