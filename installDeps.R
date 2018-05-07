@@ -7,6 +7,8 @@ install.packages("farff")
 install.packages("pROC")
 
 # Data mining packages
+# confusionMatrix
+install.packages("caret")
 
 # k-nn
 install.packages("class")
@@ -14,9 +16,8 @@ install.packages("class")
 # SVM
 install.packages("e1071")
 
-# LOF
-install.packages("DMwR2")
-install.packages("Rlof")
+# Random Forest
+install.packages("randomForest")
 
 # iForest
 install.packages("data.tree")
