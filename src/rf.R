@@ -7,13 +7,35 @@ library(pROC)
 # Data Preparation
 source("src/load.R")
 
-evaluate = function(trainData, testData, labelsColName, treeNum){
+evaluatePerformance = function(testDataLabels, prediction, firstplot, color){
+  print(confusionMatrix(data = prediction,
+                        reference = testDataLabels))
+  quality <- mean(prediction == testDataLabels)
+  cat("quality:",quality,"\n")
+  # ROC
+  rocObj <- roc(response = testDataLabels,
+                predictor = as.numeric(prediction),
+                percent=TRUE)
+  print(coords(rocObj, "best"))
+  plot(rocObj,
+       add=!firstplot,
+       grid=TRUE,
+       col=color,
+       print.thres="best",
+       main="ROC")
+  return(quality)
+}
+
+evaluate = function(trainData, testData, labelsColName, treeNum, firstplot, color){
   # Prepare formula
   varNames <- names(trainData)
   varNames <- varNames[!varNames %in% c(labelsColName)]
   varNames1 <- paste(varNames, collapse = "+")
   rf.form <- as.formula(paste(labelsColName, varNames1, sep = " ~ "))
   # Build the model
+  cat("treeNum:",treeNum,"\n")
+  testDataLabels = as.factor(testData[,labelsColName])
+  testData[,labelsColName] <- NULL
   model<-randomForest(rf.form,
                       data = trainData,
                       ntree=treeNum,
@@ -21,27 +43,33 @@ evaluate = function(trainData, testData, labelsColName, treeNum){
   # Predict using the model
   testData$pred_randomforest<-predict(model,testData)
   # Accuracy of the model
-  testDataLabels = as.factor(testData[,labelsColName])
-  print(confusionMatrix(data = testData$pred_randomforest,
-                 reference = testDataLabels))
-  quality <- mean(testData$pred_randomforest == testDataLabels)
-  print(quality)
-  # ROC
-  rocObj <- roc(response = testDataLabels,
-                predictor = as.numeric(testData$pred_randomforest),
-                percent=TRUE)
-  print(coords(rocObj, "best"))
-  plot(rocObj,
-       grid=TRUE,
-       print.thres="best",
-       main="ROC")
+  quality <- evaluatePerformance(testDataLabels, testData$pred_randomforest, firstplot, color)
+  return(c(treeNum, quality))
 }
 
+generateRaport = function(trainData, testData, labelsColName) {
+  treeNums = c(1:20)
+  lineColors = rainbow(length(treeNums))
+  qualities = matrix(nrow = length(treeNums),
+                     ncol = 2)
+  
+  for (i in 1:length(treeNums)) {
+      qualities[i,] = evaluate(trainData,
+                               testData, 
+                               labelsColName, 
+                               treeNums[[i]], 
+                               i==1,
+                               lineColors[[i]])
+  }
+  cat("best result:", qualities[qualities[,2]==max(qualities[,2]),])
+}
 
 main = function() {
-  # testing evaluate
-  evaluate(spectTrain, spectTest, "V1", 500)
-  evaluate(pwebsitesTrain, pwebsitesTest, "Result", 500)
+  generateRaport(spectTrain, spectTest, "V1")
+  # best result: 3 0.7860963
+  generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
+  # best result: 20 0.9597195
+  generateRaport(kddcup, kddcupTest, "V42")
 }
 
 

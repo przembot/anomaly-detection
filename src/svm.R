@@ -4,6 +4,52 @@ library(caret)
 # Load all the data..
 source("src/load.R")
 
+evaluate = function(trainData, trainDataLabels, testData, testDataLabels, firstplot, color){
+  # Build the model
+  model <- svm(x = trainData,
+               y = trainDataLabels,
+               type='one-classification',
+               nu=0.5,
+               scale=FALSE,
+               kernel="radial")
+  # Predict using the model
+  predicion <- predict(model,testData)
+  # Accuracy of the model
+  print(levels(as.factor(testDataLabels)))
+  print(levels(as.factor(predicion)))
+  quality <- evaluatePerformance(as.factor(testDataLabels), as.factor(predicion), firstplot, color)
+  return(quality)
+}
+
+## SPECT
+trainData = spectTrain
+testData = spectTest
+labelsColName = "V1"
+trainDataLabels = !trainData[,labelsColName]
+trainData[,labelsColName] <- NULL
+testDataLabels = !testData[,labelsColName]
+testData[,labelsColName] <- NULL
+evaluate(trainData, trainDataLabels, testData, testDataLabels, TRUE, 'green')
+
+## PHISHIHG Websites
+trainData = pwebsitesTrain
+testData = pwebsitesTest
+labelsColName = "Result"
+trainDataLabels = trainData[,labelsColName]
+levels(trainDataLabels) <- c(FALSE,TRUE)
+trainData[,labelsColName] <- NULL
+testDataLabels = testData[,labelsColName]
+levels(testDataLabels) <- c(FALSE,TRUE)
+testData[,labelsColName] <- NULL
+evaluate(trainData, trainDataLabels, testData, testDataLabels, TRUE, 'green')
+
+
+
+
+
+
+# --------------------------------------------------
+
 ## SPECT
 spectTrain$V1 = as.factor(spectTrain$V1)
 spect_model <- svm(V1 ~ ., 

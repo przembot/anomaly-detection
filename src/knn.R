@@ -1,14 +1,34 @@
 # Module which uses k-nn classifier to detect anomalies
 library(class)
-
+library(caret)
 # Load all the data..
 source("src/load.R")
 
 # Currently, training set is the model,
 # but this set can be reduced by 'condense'
 
-# SPECT
+evaluate = function(trainData, testData, labelsColName, k, firstplot, color){
+  # classify
+  cat("k:",k,"\n")
+  result <- knn(trainData[,-which(names(trainData) %in% c(labelsColName))], 
+                testData[,-which(names(testData) %in% c(labelsColName))], 
+                trainData[,labelsColName], 
+                k = k, 
+                prob=FALSE)
+  testDataLabels = as.factor(testData[,labelsColName])
+  quality <- evaluatePerformance(testDataLabels, result, firstplot, color)
+  return(c(k, quality))
+}
 
+
+generateRaport(spectTrain, spectTest, "V1")
+#best result: 1 0.7700535
+generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
+#best result: 1 0.9443533
+generateRaport(kddcup, kddcupTest, "V42")
+# ------------------------------------------------
+
+# SPECT
 # Move classification result to factor
 
 cl <- factor(spectTrain[,1])
