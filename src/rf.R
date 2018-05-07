@@ -7,20 +7,52 @@ library(pROC)
 # Data Preparation
 source("src/load.R")
 
+evaluate = function(trainData, testData, labelsColName, treeNum){
+  # Prepare formula
+  varNames <- names(trainData)
+  varNames <- varNames[!varNames %in% c(labelsColName)]
+  varNames1 <- paste(varNames, collapse = "+")
+  rf.form <- as.formula(paste(labelsColName, varNames1, sep = " ~ "))
+  # Build the model
+  model<-randomForest(rf.form,
+                      data = trainData,
+                      ntree=treeNum,
+                      importance=T)
+  # Predict using the model
+  testData$pred_randomforest<-predict(model,testData)
+  # Accuracy of the model
+  testDataLabels = as.factor(testData[,labelsColName])
+  print(confusionMatrix(data = testData$pred_randomforest,
+                 reference = testDataLabels))
+  quality <- mean(testData$pred_randomforest == testDataLabels)
+  print(quality)
+  # ROC
+  rocObj <- roc(response = testDataLabels,
+                predictor = as.numeric(testData$pred_randomforest),
+                percent=TRUE)
+  print(coords(rocObj, "best"))
+  plot(rocObj,
+       grid=TRUE,
+       print.thres="best",
+       main="ROC")
+}
+
+
+main = function() {
+  # testing evaluate
+  evaluate(spectTrain, spectTest, "V1", 500)
+  evaluate(pwebsitesTrain, pwebsitesTest, "Result", 500)
+}
+
+
 ## SPECT
 str(spectTrain)
 
 # Make class variable as a factor (categorical)
 spectTrain$V1 = as.factor(spectTrain$V1)
 
-# Prepare formula
-varNames <- names(spectTrain)
-varNames <- varNames[!varNames %in% c("V1")]
-varNames1 <- paste(varNames, collapse = "+")
-rf.form <- as.formula(paste("V1", varNames1, sep = " ~ "))
-
 # Build the model
-model<-randomForest(rf.form,
+model<-randomForest(V1 ~.,
                     data=spectTrain,
                     ntree=500,
                     importance=T)
@@ -38,9 +70,13 @@ confusionMatrix(data = spectTest$pred_randomforest,
 quality <- mean(spectTest$pred_randomforest == spectTest$V1)
 # train: 0.9375
 # test: 0.7754011
-plot(roc(response = spectTest$V1,
-         predictor = as.numeric(as.character(spectTest$pred_randomforest)),
-         direction="<"),
+rocObj <- roc(response = spectTest$V1,
+              predictor = as.numeric(as.character(spectTest$pred_randomforest)),
+              percent=TRUE)
+print(coords(rocObj, "best"))
+plot(rocObj,
+     grid=TRUE,
+     print.thres="best",
      main="ROC")
 
 
