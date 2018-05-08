@@ -4,12 +4,12 @@ library(caret)
 # Load all the data..
 source("src/load.R")
 
-evaluate = function(trainData, trainDataLabels, testData, testDataLabels, firstplot, color){
+evaluate = function(trainData, trainDataLabels, testData, testDataLabels, nu, firstplot, color){
   # Build the model
   model <- svm(x = trainData,
                y = trainDataLabels,
                type='one-classification',
-               nu=0.5,
+               nu=nu,
                scale=FALSE,
                kernel="radial")
   # Predict using the model
@@ -23,6 +23,24 @@ evaluate = function(trainData, trainDataLabels, testData, testDataLabels, firstp
   return(quality)
 }
 
+generateRaport = function(trainData, trainDataLabels, testData, testDataLabels) {
+  nu = c(0.1, 0.25, 0.4, 0.5, 0.8, 0.9)
+  lineColors = rainbow(length(nu))
+  qualities = matrix(nrow = length(nu),
+                     ncol = 2)
+  
+  for (i in 1:length(nu)) {
+    qualities[i,] = evaluate(trainData, 
+                             trainDataLabels, 
+                             testData, 
+                             testDataLabels,
+                             nu[[i]],
+                             i==1,
+                             lineColors[[i]])
+  }
+  cat("best result:", qualities[qualities[,2]==max(qualities[,2]),])
+}
+
 ## SPECT
 trainData = spectTrain
 testData = spectTest
@@ -31,7 +49,24 @@ trainDataLabels = !trainData[,labelsColName]
 trainData[,labelsColName] <- NULL
 testDataLabels = !testData[,labelsColName]
 testData[,labelsColName] <- NULL
-evaluate(trainData, trainDataLabels, testData, testDataLabels, TRUE, 'green')
+
+svm_tune <- tune.svm(trainData,
+                     trainDataLabels,
+                     type="one-classification",
+                     kernel="radial",
+                     nu = c(0.1, 0.25, 0.4, 0.5, 0.8, 0.9))
+# Parameter tuning of ‘svm’:
+#   
+#   - sampling method: 10-fold cross validation 
+# 
+# - best parameters:
+#   nu
+#   0.4
+# 
+# - best performance: 0.2375 
+
+generateRaport(trainData, trainDataLabels, testData, testDataLabels)
+
 
 ## PHISHIHG Websites
 trainData = pwebsitesTrain
