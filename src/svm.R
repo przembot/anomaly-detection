@@ -16,7 +16,9 @@ evaluate = function(trainData, trainDataLabels, testData, testDataLabels, firstp
   predicion <- predict(model,testData)
   # Accuracy of the model
   print(levels(as.factor(testDataLabels)))
+  print(class(testDataLabels))
   print(levels(as.factor(predicion)))
+  print(class(predicion))
   quality <- evaluatePerformance(as.factor(testDataLabels), as.factor(predicion), firstplot, color)
   return(quality)
 }
@@ -36,12 +38,11 @@ trainData = pwebsitesTrain
 testData = pwebsitesTest
 labelsColName = "Result"
 trainDataLabels = trainData[,labelsColName]
-levels(trainDataLabels) <- c(FALSE,TRUE)
 trainData[,labelsColName] <- NULL
 testDataLabels = testData[,labelsColName]
-levels(testDataLabels) <- c(FALSE,TRUE)
+levels(testDataLabels) <- c(T,F)
 testData[,labelsColName] <- NULL
-evaluate(trainData, trainDataLabels, testData, testDataLabels, TRUE, 'green')
+evaluate(trainData, as.numeric(trainDataLabels), testData, as.logical(testDataLabels), TRUE, 'green')
 
 
 

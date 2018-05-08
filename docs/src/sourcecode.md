@@ -32,11 +32,16 @@ Projekt został podzielony w następujący sposób:
 # Dokumentacja poszczególnych modułów
 
 ## load.R
+Skrypt odpowiada za wczytanie i wstępne przetworzenie danych (m.in. podział na zbiory treningowy i testowy, rozłożenie na czynniki danych nienumerycznych).
 
 ## knn.R
+Program realizuje algorytm k-najbliższych sąsiadów przy wykorzystaniu bilioteki _class_. W ramach skryptu algorytm testowany jest z różnymi wartościami parametru _k_ na wszystkich zbiorach danych. 
 
 ## svm.R
+Program realizuje jednoklasową klasyfikację przy pomocy maszyny wektorów nośnych _SVM_ przy wykorzystaniu bilioteki _e1071_.
 
 ## rf.R
+Program realizuje klasyfikację przy pomocy lasu losowego z wykorzystaniem bilioteki _randomForest_.
 
-## if.R
+## iforest.R
+Implementacja lasu izolacji.
