@@ -48,7 +48,7 @@ evaluate = function(trainData, testData, labelsColName, treeNum, firstplot, colo
 }
 
 generateRaport = function(trainData, testData, labelsColName) {
-  treeNums = c(1:20)
+  treeNums = c(1,2,5,10,20,50,100,200)
   lineColors = rainbow(length(treeNums))
   qualities = matrix(nrow = length(treeNums),
                      ncol = 2)
