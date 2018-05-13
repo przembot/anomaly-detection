@@ -10,8 +10,9 @@ source("src/load.R")
 evaluate = function(trainData, testData, labelsColName, k, firstplot, color){
   # classify
   cat("k:",k,"\n")
-  result <- knn(trainData[,-which(names(trainData) %in% c(labelsColName))], 
-                testData[,-which(names(testData) %in% c(labelsColName))], 
+  labelsColNb = which( colnames(trainData)==labelsColName )
+  result <- knn(trainData[,-labelsColNb], 
+                testData[,-labelsColNb], 
                 trainData[,labelsColName], 
                 k = k, 
                 prob=FALSE)
@@ -20,12 +21,55 @@ evaluate = function(trainData, testData, labelsColName, k, firstplot, color){
   return(c(k, quality))
 }
 
+chooseBestParameter = function(trainData, testData, labelsColName, k_values){
+  if(missing(k_values)){
+    k_values = c(1,3,5,7,9)
+  }
+  lineColors = rainbow(length(k_values))
+  qualities = matrix(nrow = length(k_values),
+                     ncol = 2)
+  # choose best k value
+  for (i in 1:length(k_values)) {
+    qualities[i,] = evaluate(trainData,
+                             testData, 
+                             labelsColName, 
+                             k_values[[i]], 
+                             i==1,
+                             lineColors[[i]])
+  }
+  best_result = qualities[qualities[,2]==max(qualities[,2]),]
+  cat("best result:", best_result)
+  return(best_result)
+}
 
-generateRaport(spectTrain, spectTest, "V1")
-#best result: 1 0.7700535
-generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
-#best result: 1 0.9443533
-generateRaport(kddcup, kddcupTest, "V42")
+generateRaport = function(trainData, testData, labelsColName, parameter_value, iterations) {
+  # for given k count mean value of quality
+  lineColors = rainbow(iterations)
+  qualities = matrix(nrow = iterations, ncol = 2)
+  for (i in 1:iterations) {
+    qualities[i,] = evaluate(trainData,
+                             testData, 
+                             labelsColName, 
+                             1, 
+                             i==1,
+                             lineColors[[i]])
+  }
+  print(qualities)
+  mean_quality = mean(qualities[,2])
+  cat("mean_quality:", mean_quality)
+}
+
+
+best_value = chooseBestParameter(spectTrain, spectTest, "V1")
+generateRaport(spectTrain, spectTest, "V1", best_value, 20)
+
+best_value = chooseBestParameter(pwebsitesTrain, pwebsitesTest, "Result")
+generateRaport(pwebsitesTrain, pwebsitesTest, "Result", best_value, 20)
+
+best_value = chooseBestParameter(kddcup, kddcupTest, "V42")
+# Error: too many ties in knn
+#  too many points equidistant from the classifing point?
+generateRaport(kddcup, kddcupTest, "V42", best_value, 20)
 # ------------------------------------------------
 
 # SPECT

@@ -229,8 +229,6 @@ Do uruchomienia algorytmu SVM należy podać:
     - gamma - definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg),
     - nu - jest górną granicą przykładów treningowych w stosunku do ich całkowitej liczby (przykładowo, wartość 0.05 gwarantuje, że co najwyżej 5% przykładów treningowych będzie niepoprawnie zaklasyfikowanych (w skutek małego marginesu) i conajmniej 5% przykładów treningowych będzie wektorami nośnymi).
 
-TODO: opis strojenia -> wykorzystanie tune.svm
-
 ### Las losowy
 Parametry etapu uczenia:
 * liczba drzew _ntree_
@@ -283,12 +281,53 @@ opis random forest wraz z jego parametrami
 ## Uzyskane wyniki
 
 ### k-NN
+Wartości w tabeli: średnia jakość dla 20 testów
+
+| Dane              |  k  | quality   |
+| ----------------- |:---:| :--------:|
+| SPECT Heart       |  1  | 0.6550802 |
+| Phishing Websites |  1  | 0.9410098 |
+| KDD Cup 1999 Data |     |           |
 
 ### SVM
 
+| Dane              | gamma | quality   |
+| ----------------- |:-----:| :--------:|
+| SPECT Heart       |       | 					|
+| Phishing Websites |       |  	    		|
+| KDD Cup 1999 Data |       |           |
+
 ### random forest
 
+| Dane              | ntree | quality   |
+| ----------------- |:-----:| :--------:|
+| SPECT Heart       |  200  | 0.774167  |
+| Phishing Websites |  200  | 0.9622677 |
+| KDD Cup 1999 Data |       |           |
+
+1) SPECT Heart
+ntree   quality         freq
+1       0.7989305       5
+5       0.7847594       8
+20      0.7799847       7
+100     0.7794118       4
+10      0.776738        4
+50      0.7765894       9
+200     0.774167        13
+
+2) Phishing Websites
+ntree   quality         freq
+100     0.9626097       14
+50      0.9624584       9
+200     0.9622677       27
+
 ### iForest
+
+| Dane              | ntree | quality   |
+| ----------------- |:-----:| :--------:|
+| SPECT Heart       |       |           |
+| Phishing Websites |       |           |
+| KDD Cup 1999 Data |       |           |
 
 ## Wnioski z wyników
 

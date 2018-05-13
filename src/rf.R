@@ -27,6 +27,10 @@ evaluatePerformance = function(testDataLabels, prediction, firstplot, color){
 }
 
 evaluate = function(trainData, testData, labelsColName, treeNum, firstplot, color){
+  # Prepare data
+  trainData[,labelsColName] = as.factor(trainData[,labelsColName])
+  testDataLabels = as.factor(testData[,labelsColName])
+  testData[,labelsColName] <- NULL
   # Prepare formula
   varNames <- names(trainData)
   varNames <- varNames[!varNames %in% c(labelsColName)]
@@ -34,12 +38,9 @@ evaluate = function(trainData, testData, labelsColName, treeNum, firstplot, colo
   rf.form <- as.formula(paste(labelsColName, varNames1, sep = " ~ "))
   # Build the model
   cat("treeNum:",treeNum,"\n")
-  testDataLabels = as.factor(testData[,labelsColName])
-  testData[,labelsColName] <- NULL
   model<-randomForest(rf.form,
                       data = trainData,
-                      ntree=treeNum,
-                      importance=T)
+                      ntree=treeNum)
   # Predict using the model
   testData$pred_randomforest<-predict(model,testData)
   # Accuracy of the model
@@ -61,14 +62,30 @@ generateRaport = function(trainData, testData, labelsColName) {
                                i==1,
                                lineColors[[i]])
   }
-  cat("best result:", qualities[qualities[,2]==max(qualities[,2]),])
+  best_result = qualities[match(max(qualities[,2]), qualities[,2]),]
+  # best_result = qualities[qualities[,2]==max(qualities[,2]),]
+  cat("best result:", best_result)
+  return(best_result)
 }
 
 main = function() {
+  
+  result = matrix(nrow=50,ncol=2)
+  for(i in 1:50){
+    result[i,] = generateRaport(spectTrain, spectTest, "V1")
+  }
+  tries = unique(result[,1])
+  for(i in tries){
+    print(i)
+    print(mean(result[result[,1]==i,2]))
+  }
+  as.data.frame(table(result[,1]))
+  
   generateRaport(spectTrain, spectTest, "V1")
-  # best result: 3 0.7860963
   generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
-  # best result: 20 0.9597195
+  # to avoid error: Can not handle categorical predictors with more than 53 categories.
+  # V3 : Factor w/ 66 levels
+  kddcup$V3 = as.numeric(as.character(kddcup$V3))
   generateRaport(kddcup, kddcupTest, "V42")
 }
 
@@ -137,10 +154,6 @@ trainSet <- kddcup
 testSet <- kddcupTest
 trainSet$V42 = as.factor(trainSet$V42)
 testSet$V42 = as.factor(testSet$V42)
-
-# to avoid error: Can not handle categorical predictors with more than 53 categories.
-# V3 : Factor w/ 66 levels
-trainSet$V3 = as.numeric(as.character(trainSet$V3))
 
 # Build the model
 model<-randomForest(V42 ~ .,
