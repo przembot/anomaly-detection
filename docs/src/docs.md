@@ -289,11 +289,19 @@ Wartości w tabeli: średnia jakość dla 20 testów
 | Phishing Websites |  1  | 0.9410098 |
 | KDD Cup 1999 Data |     |           |
 
+1)
+  k   quality threshold specificity sensitivity  fall-out
+1 1 0.6684492       1.5    80.00000    65.69767 0.5086207
+2 3 0.6363636       1.5    93.33333    61.04651 0.6320755
+3 5 0.6203209       1.5    86.66667    59.88372 0.6571429
+4 7 0.5721925       1.5    86.66667    54.65116 0.8125000
+5 9 0.5614973       1.5    93.33333    52.90698 0.8804348
+
 ### SVM
 
 | Dane              | gamma | quality   |
 | ----------------- |:-----:| :--------:|
-| SPECT Heart       |       | 					|
+| SPECT Heart       |   1   | 0.6363636	|
 | Phishing Websites |       |  	    		|
 | KDD Cup 1999 Data |       |           |
 
