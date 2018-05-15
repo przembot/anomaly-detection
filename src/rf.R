@@ -81,11 +81,13 @@ main = function() {
   }
   as.data.frame(table(result[,1]))
   
+  evaluate(spectTrain, spectTest, "V1", 200, T, 'green')
   generateRaport(spectTrain, spectTest, "V1")
   generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
   # to avoid error: Can not handle categorical predictors with more than 53 categories.
   # V3 : Factor w/ 66 levels
   kddcup$V3 = as.numeric(as.character(kddcup$V3))
+  # Error in predict.randomForest(): New factor levels not present in the training data
   generateRaport(kddcup, kddcupTest, "V42")
 }
 

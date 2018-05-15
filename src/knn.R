@@ -11,7 +11,7 @@ source("src/load.R")
 evaluatePerformance = function(testDataLabels, prediction, k, firstplot, color){
   cnfMx <- confusionMatrix(data = prediction,
                         reference = testDataLabels)
-  # print(cnfMx$table)
+  # print(cnfMx)
   FPR = cnfMx$table[1,2]/(cnfMx$table[2,1]+cnfMx$table[2,2])
   quality <- mean(prediction == testDataLabels)
   # ROC
@@ -32,8 +32,8 @@ evaluatePerformance = function(testDataLabels, prediction, k, firstplot, color){
        type="p")
   # Add a legend
   # legend("bottomright", legend=sprintf("k:%d, auc:%f",k,auc(rocObj),"\n"),fill=color, col=color, cex = 0.8)
-  ev = c(k, quality, xy, FPR)
-  names(ev)<- c("k", "quality", names(ev)[3:5], "fall-out")
+  ev = c(k, quality, xy[2:3], FPR)
+  names(ev)<- c("k", "quality", "sensitivity", "specificity", "fall-out")
   ev <- as.data.frame(t(ev))
   return(ev)
 }
