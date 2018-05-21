@@ -289,7 +289,7 @@ Wartości w tabeli: średnia jakość dla 20 testów
 | Phishing Websites |  1  | 0.9410098 |
 | KDD Cup 1999 Data |     |           |
 
-1)
+1) SPECT Heart
   k   quality threshold specificity sensitivity  fall-out
 1 1 0.6684492       1.5    80.00000    65.69767 0.5086207
 2 3 0.6363636       1.5    93.33333    61.04651 0.6320755
@@ -313,17 +313,35 @@ Wartości w tabeli: średnia jakość dla 20 testów
 | Phishing Websites |  200  | 0.9622677 |
 | KDD Cup 1999 Data |       |           |
 
-1) SPECT Heart
-ntree   quality         freq
-1       0.7989305       5
-5       0.7847594       8
-20      0.7799847       7
-100     0.7794118       4
-10      0.776738        4
-50      0.7765894       9
-200     0.774167        13
+1) SPECT Heart: wybór liczby drzew
+   ntree  Freq  Quality
+1    50   10    0.7796791
+2   100    6    0.7789661
+3   200    5    0.7754011
+4   300    8    0.7760695
+5   400    6    0.7771836
+6   500    5    0.7786096
+7   600    4    0.7820856
+8   700    3    0.7771836
+9   800    1    0.7807487
+10  900    2    0.7807487
+
+Najlepszy wynik dla ntree=50
+![alt text][roc_spect_rf_50]
 
 2) Phishing Websites
+   ntree Freq   Quality
+1    50    5    0.9576645
+2   100    9    0.9578723
+3   200    7    0.9573886
+4   300    4    0.9575664
+5   400    4    0.9576418
+6   500    1    0.957755
+7   600    7    0.9575394
+8   700    4    0.9573778
+9   800    7    0.9576257
+10  900    2    0.9576795
+
 ntree   quality         freq
 100     0.9626097       14
 50      0.9624584       9
@@ -346,3 +364,8 @@ ntree   quality         freq
 [wphish]: https://archive.ics.uci.edu/ml/datasets/Website+Phishing
 [phishw]: https://archive.ics.uci.edu/ml/datasets/Phishing+Websites
 [kdd]: http://archive.ics.uci.edu/ml/datasets/kdd+cup+1999+data
+
+
+[roc_spect_rf_50]: 
+https://github.com/przembot/mow-projekt/raw/master/docs/images/roc_spec_rf_50.pdf
+"roc_spect_rf_50"

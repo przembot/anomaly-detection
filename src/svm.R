@@ -5,25 +5,6 @@ library(pROC)
 # Load all the data..
 source("src/load.R")
 
-# evaluate = function(trainData, trainDataLabels, testData, testDataLabels, nu, firstplot, color){
-#   # Build the model
-#   model <- svm(x = trainData,
-#                y = trainDataLabels,
-#                type='one-classification',
-#                nu=nu,
-#                scale=FALSE,
-#                kernel="radial")
-#   # Predict using the model
-#   predicion <- predict(model,testData)
-#   # Accuracy of the model
-#   print(levels(as.factor(testDataLabels)))
-#   print(class(testDataLabels))
-#   print(levels(as.factor(predicion)))
-#   print(class(predicion))
-#   quality <- evaluatePerformance(as.factor(testDataLabels), as.factor(predicion), firstplot, color)
-#   return(quality)
-# }
-
 evaluatePerformance = function(testDataLabels, prediction, gamma, firstplot, color){
   cnfMx <- confusionMatrix(data = prediction,
                            reference = testDataLabels)
@@ -42,12 +23,10 @@ evaluatePerformance = function(testDataLabels, prediction, gamma, firstplot, col
        col=color,
        # print.thres="best",
        print.auc = T,
-       print.auc.y = gamma*2,
+       # print.auc.y = gamma*2,
        print.auc.pattern = paste(sprintf("gamma=%f, ",gamma),"AUC:%.1f%%"),
        main="ROC",
        type="p")
-  # Add a legend
-  # legend("bottomright", legend=sprintf("gamma:%d, auc:%f",gamma,auc(rocObj),"\n"),fill=color, col=color, cex = 0.8)
   ev = c(gamma, quality, xy[2:3], FPR)
   names(ev)<- c("gamma", "quality", "sensitivity", "specificity", "fall-out")
   ev <- as.data.frame(t(ev))
@@ -81,6 +60,32 @@ evaluate = function(trainData, testData, labelsColName, gamma, firstplot, color)
   return(ev)
 }
 
+evaluate = function(trainData, testData, labelsColName){
+  varNames <- names(trainData)
+  varNames <- varNames[!varNames %in% c(labelsColName)]
+  varNames1 <- paste(varNames, collapse = "+")
+  rf.form <- as.formula(paste(labelsColName, varNames1, sep = " ~ "))
+  testDataLabels = as.factor(testData[,labelsColName])
+  testData[,labelsColName] <- NULL
+  trainData[,labelsColName] <- as.numeric(as.character(trainData[,labelsColName]))
+  # Build the model
+  model <- svm(rf.form,
+               data = trainData,
+               type='one-classification',
+               scale=FALSE, # do not scale each feature
+               kernel="radial")
+  print(summary(model))
+  # Predict using the model
+  predicion <- predict(model,testData)
+  # Accuracy of the model
+  print(table(predicion,testDataLabels))
+  n_prediction <-as.factor(predicion)
+  levels(testDataLabels) <- levels(n_prediction)
+  print(levels(n_prediction))
+  ev <- evaluatePerformance(testDataLabels, n_prediction, model$gamma, T, 'green')
+  return(ev)
+}
+
 generateRaport = function(trainData, testData, labelsColName) {
   gammas = c(0.125, 0.25, 0.5, 1, 2)
   lineColors = rainbow(length(gammas))
@@ -97,50 +102,12 @@ generateRaport = function(trainData, testData, labelsColName) {
   cat("best result:", qualities[qualities[,2]==max(qualities[,2]),])
 }
 
-## SPECT
-trainData = spectTrain
-testData = spectTest
-labelsColName = "V1"
-trainDataLabels = !trainData[,labelsColName]
-trainData[,labelsColName] <- NULL
-testDataLabels = !testData[,labelsColName]
-testData[,labelsColName] <- NULL
 
-svm_tune <- tune.svm(trainData,
-                     trainDataLabels,
-                     type="one-classification",
-                     kernel="radial",
-                     gamma = c(0.001, 0.01, 0.1, 0.5))
-
-
-evaluate(spectTrain, spectTest, "V1", 0.001, TRUE, 'green')
+evaluate(spectTrain, spectTest, "V1")
 generateRaport(spectTrain, spectTest, "V1")
-evaluate(pwebsitesTrain, pwebsitesTest, "Result", 0.001, T, 'green')
-evaluate(kddcup, kddcupTest, "V42", 0.4, T, 'green')
+evaluate(pwebsitesTrain, pwebsitesTest, "Result")
+evaluate(kddcup, kddcupTest, "V42")
 generateRaport(trainData, trainDataLabels, testData, testDataLabels)
-
-
-## PHISHIHG Websites
-trainData = pwebsitesTrain
-testData = pwebsitesTest
-labelsColName = "Result"
-trainDataLabels = trainData[,labelsColName]
-trainData[,labelsColName] <- NULL
-testDataLabels = testData[,labelsColName]
-levels(testDataLabels) <- c(T,F)
-testData[,labelsColName] <- NULL
-
-svm_tune <- tune(svm, train.x=trainData, train.y=trainDataLabels, 
-                 kernel="radial", ranges=list(cost=10^(-1:2), gamma=c(0.001, 0.01, 0.1,.5,1,2)))
-
-print(svm_tune)
-
-evaluate(trainData, as.numeric(trainDataLabels), testData, as.logical(testDataLabels), 0.4,TRUE, 'green')
-
-
-
-
-
 
 # --------------------------------------------------
 
@@ -183,21 +150,6 @@ testSet <- kddcupTest
 cl <- trainSet$V42
 trainSet <- subset(trainSet, select=-V42)
 table(cl)/nrow(trainSet)
-
-tune.svm(trainSet,
-         cl,
-         type="one-classification",
-         kernel="radial",
-         cost=seq(.5,2.5,.5),
-         cachesize=100,
-         cross=10,
-         gamma=1/8)
-
-#- sampling method: 10-fold cross validation 
-# - best parameters:
-#   gamma cost
-# 0.125  0.5
-# - best performance: 0.460625 
 
 kddcup_model <- svm(trainSet,
                     cl,

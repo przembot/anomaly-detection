@@ -49,7 +49,7 @@ evaluate = function(trainData, testData, labelsColName, treeNum, firstplot, colo
 }
 
 generateRaport = function(trainData, testData, labelsColName) {
-  treeNums = c(1,2,5,10,20,50,100,200)
+  treeNums = c(50,100,200,300, 400, 500, 600, 700, 800, 900)
   lineColors = rainbow(length(treeNums))
   qualities = matrix(nrow = length(treeNums),
                      ncol = 2)
@@ -69,10 +69,10 @@ generateRaport = function(trainData, testData, labelsColName) {
 }
 
 main = function() {
-  
-  result = matrix(nrow=50,ncol=2)
-  for(i in 1:50){
-    result[i,] = generateRaport(spectTrain, spectTest, "V1")
+  iterations = 10
+  result = matrix(nrow=iterations,ncol=2)
+  for(i in 1:iterations){
+    result[i,] = generateRaport(kddcup, kddcupTest, "V42")
   }
   tries = unique(result[,1])
   for(i in tries){
@@ -81,7 +81,8 @@ main = function() {
   }
   as.data.frame(table(result[,1]))
   
-  evaluate(spectTrain, spectTest, "V1", 200, T, 'green')
+  evaluate(spectTrain, spectTest, "V1", 50, T, 'green')
+  evaluate(pwebsitesTrain, pwebsitesTest, "Result", 100, T, 'green')
   generateRaport(spectTrain, spectTest, "V1")
   generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
   # to avoid error: Can not handle categorical predictors with more than 53 categories.
