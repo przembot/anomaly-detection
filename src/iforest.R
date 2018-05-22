@@ -1,9 +1,3 @@
-# iForest algorithm implementation
-library(data.tree)
-library(caret)
-
-library(pROC)
-
 # @param trainData - training data without labels
 # @param treeNum - number of iTrees in iForest
 # @param chi - subsampling size
@@ -242,6 +236,8 @@ main = function() {
   
   #set.seed(1337)
   generateRaport(spectData, spectTestData, spectTestLabels)
+  dev.copy(png,'../docs/image/spect_if.png')
+  dev.off()
   
   phishingData <- pwebsitesTrain[which(pwebsitesTrain[,"Result"] == 1),]
   phishingData <- phishingData[,!names(phishingData) == "Result"]
@@ -249,6 +245,8 @@ main = function() {
   phishingTestData <- pwebsitesTest[,!names(pwebsitesTest) == "Result"]
   phishingTestLabels <- pwebsitesTest$Result
   generateRaport(phishingData, phishingTestData, phishingTestLabels)
+  dev.copy(png,'../docs/image/pweb_if.png')
+  dev.off()
   
   kddData <- kddcup[which(kddcup[,"V42"] == T),]
   kddData <- kddData[,!names(kddData) == "V42"]
@@ -256,4 +254,6 @@ main = function() {
   kddTestLabels <- kddcupTest$V42
   chiVals = c(256, 512, 1024)
   generateRaport(kddData, kddTestData, kddTestLabels, chiVals)
+  dev.copy(png,'../docs/image/kdd_if.png')
+  dev.off()
 }

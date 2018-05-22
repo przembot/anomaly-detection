@@ -1,12 +1,3 @@
-library(randomForest)
-library(e1071)
-library(caret)
-
-library(pROC)
-
-# Data Preparation
-source("src/load.R")
-
 source("src/utils.R")
 
 evaluatePerformance = function(testDataLabels, prediction){

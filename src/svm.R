@@ -1,10 +1,3 @@
-# Module which uses one class SVM classifier to detect anomalies
-library(e1071)
-library(caret)
-library(pROC)
-# Load all the data..
-source("src/load.R")
-
 evaluatePerformance = function(testDataLabels, prediction, gamma, firstplot, color){
   cnfMx <- confusionMatrix(data = prediction,
                            reference = testDataLabels)

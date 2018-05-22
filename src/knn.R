@@ -1,10 +1,3 @@
-# Module which uses k-nn classifier to detect anomalies
-library(class)
-library(caret)
-library(pROC)
-# Load all the data..
-source("src/load.R")
-
 # Currently, training set is the model,
 # but this set can be reduced by 'condense'
 
