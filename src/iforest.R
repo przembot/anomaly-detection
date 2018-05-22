@@ -185,10 +185,12 @@ roundDown = function(x) {
 # @param testData - test data without labels
 # @param testDataLabels - vector of test data labels
 # Generates ROC curves plot
-generateRaport = function(trainData, testData, testDataLabels) {
+generateRaport = function(trainData, testData, testDataLabels, chiVals) {
   treeNums = c(10, 20, 30)
   sizeTrain = nrow(trainData)
-  chiVals = sapply(c(sizeTrain, sizeTrain/2), roundDown)
+  if(missing(chiVals)){
+    chiVals = sapply(c(sizeTrain, sizeTrain/2), roundDown)
+  }
   lineColors = rainbow(length(treeNums)*length(chiVals))
   
   for (i in 1:length(treeNums)) {
@@ -252,5 +254,6 @@ main = function() {
   kddData <- kddData[,!names(kddData) == "V42"]
   kddTestData <- kddcupTest[,!names(kddcupTest) == "V42"]
   kddTestLabels <- kddcupTest$V42
-  generateRaport(kddData, kddTestData, kddTestLabels)
+  chiVals = c(256, 512, 1024)
+  generateRaport(kddData, kddTestData, kddTestLabels, chiVals)
 }
