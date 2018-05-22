@@ -2,31 +2,8 @@
 library(e1071)
 library(caret)
 library(pROC)
-# Load all the data..
-#source("src/load.R")
 
 source("src/utils.R")
-
-evaluatePerformance = function(testDataLabels, prediction) {
-  quality <- mean(prediction == testDataLabels)
-  cat("quality:",quality,"\n")
-  
-  dataIn <- as.factor(prediction)
-  levels(dataIn) <- c(0, 1)
-  refIn <- as.factor(testDataLabels)
-  levels(refIn) <- c(0, 1)
-  
-  perf <- confusionMatrix(data = dataIn,
-                          reference = refIn,
-                          positive = "1")
-  
-  print(perf)
-  sens = perf$table[2,2]*100/(perf$table[1,2]+perf$table[2,2])
-  spec = perf$table[1,1]*100/(perf$table[1,1]+perf$table[2,1])
-  
-  c(sens, spec)
-  
-}
 
 evaluate = function(trainData, testData, labelsColName, gamma) {
   varNames <- names(trainData)
@@ -64,7 +41,7 @@ generateRaport = function(trainData, testData, labelsColName) {
   graphROC(qualities)
 }
 
-main = function() {
+svmMain = function() {
   generateRaport(spectTrain, spectTest, "V1")
   dev.copy(png,'./docs/images/spect_svm.png')
   dev.off()

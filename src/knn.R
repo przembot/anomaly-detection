@@ -1,3 +1,8 @@
+# Module which uses k-nn classifier to detect anomalies
+library(class)
+library(caret)
+library(pROC)
+
 # Currently, training set is the model,
 # but this set can be reduced by 'condense'
 
@@ -82,21 +87,22 @@ generateRaport = function(trainData, testData, labelsColName, parameter_value, i
   return(mean_quality)
 }
 
-# q = evaluate(spectTrain, spectTest, "V1", 1, T, 'green')
-best_value = chooseBestParameter(spectTrain, spectTest, "V1")
-generateRaport(spectTrain, spectTest, "V1", best_value, 20)
-dev.copy(png,'./docs/images/spect_knn.png')
-dev.off()
 
-# best_value = chooseBestParameter(pwebsitesTrain, pwebsitesTest, "Result")
-# generateRaport(pwebsitesTrain, pwebsitesTest, "Result", best_value, 20)
-# dev.copy(png,'./docs/images/pweb_knn.png')
-# dev.off()
-# 
-# best_value = chooseBestParameter(kddcup, kddcupTest, "V42")
-# # Error: too many ties in knn
-# #  too many points equidistant from the classifing point?
-# generateRaport(kddcup, kddcupTest, "V42", best_value, 20)
-# dev.copy(png,'./docs/images/kdd_knn.png')
-# dev.off()
+knnMain = function () {
+  # q = evaluate(spectTrain, spectTest, "V1", 1, T, 'green')
+  best_value = chooseBestParameter(spectTrain, spectTest, "V1")
+  generateRaport(spectTrain, spectTest, "V1", best_value, 20)
+  dev.copy(png,'./docs/images/spect_knn.png')
+  dev.off()
 
+  best_value = chooseBestParameter(pwebsitesTrain, pwebsitesTest, "Result")
+  generateRaport(pwebsitesTrain, pwebsitesTest, "Result", best_value, 20)
+  dev.copy(png,'./docs/images/pweb_knn.png')
+  dev.off()
+
+  #best_value = chooseBestParameter(kddcup, kddcupTest, "V42")
+  # note: without ties randomisation, kddcup will fail to classify
+  #generateRaport(kddcup, kddcupTest, "V42", best_value, 20)
+  #dev.copy(png,'./docs/images/kdd_knn.png')
+  #dev.off()
+}

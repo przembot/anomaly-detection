@@ -1,3 +1,9 @@
+# iForest algorithm implementation
+library(data.tree)
+library(caret)
+
+library(pROC)
+
 # @param trainData - training data without labels
 # @param treeNum - number of iTrees in iForest
 # @param chi - subsampling size
@@ -202,7 +208,10 @@ evaluate = function(trainData, testData, testDataLabels, treeNum, chi, firstplot
 
   prediction <- predict(model, testData)
 
-  rocObj <- roc(response = testDataLabels,
+  refIn <- as.factor(testDataLabels)
+  levels(refIn) <- c(0, 1)
+  
+  rocObj <- roc(response = refIn,
                 predictor = prediction,
                 percent=TRUE)
 
@@ -220,40 +229,38 @@ evaluate = function(trainData, testData, testDataLabels, treeNum, chi, firstplot
        main="ROC curves")
 }
 
-main = function() {
+iforestMain = function() {
   # data preparation
+  # for training use only samples which are normal
 
   # training set
-  spectData <- spectTrain[which(spectTrain[,"V1"] == 1),]
+  spectData <- spectTrain[which(spectTrain[,"V1"] == 0),]
   spectData <- spectData[,!names(spectData) == "V1"]
   
   # test set
   spectTestData <- spectTest[,!names(spectTest) == "V1"]
   spectTestLabels <- spectTest$V1
-  # and also swap 1 with 0, because anomaly is labeled as 0
-  # in spect data set
-  spectTestLabels <- spectTestLabels == 0
   
   #set.seed(1337)
   generateRaport(spectData, spectTestData, spectTestLabels)
-  dev.copy(png,'../docs/images/spect_if.png')
+  dev.copy(png,'./docs/images/spect_if.png')
   dev.off()
   
-  # phishingData <- pwebsitesTrain[which(pwebsitesTrain[,"Result"] == 1),]
-  # phishingData <- phishingData[,!names(phishingData) == "Result"]
-  # 
-  # phishingTestData <- pwebsitesTest[,!names(pwebsitesTest) == "Result"]
-  # phishingTestLabels <- pwebsitesTest$Result
-  # generateRaport(phishingData, phishingTestData, phishingTestLabels)
-  # dev.copy(png,'./docs/images/pweb_if.png')
-  # dev.off()
-  # 
-  # kddData <- kddcup[which(kddcup[,"V42"] == T),]
-  # kddData <- kddData[,!names(kddData) == "V42"]
-  # kddTestData <- kddcupTest[,!names(kddcupTest) == "V42"]
-  # kddTestLabels <- kddcupTest$V42
-  # chiVals = c(256, 512, 1024)
-  # generateRaport(kddData, kddTestData, kddTestLabels, chiVals)
-  # dev.copy(png,'./docs/images/kdd_if.png')
-  # dev.off()
+  phishingData <- pwebsitesTrain[which(pwebsitesTrain[,"Result"] == 0),]
+  phishingData <- phishingData[,!names(phishingData) == "Result"]
+
+  phishingTestData <- pwebsitesTest[,!names(pwebsitesTest) == "Result"]
+  phishingTestLabels <- pwebsitesTest$Result
+  generateRaport(phishingData, phishingTestData, phishingTestLabels)
+  dev.copy(png,'./docs/images/pweb_if.png')
+  dev.off()
+   
+  kddData <- kddcup[which(kddcup[,"V42"] == 0),]
+  kddData <- kddData[,!names(kddData) == "V42"]
+  kddTestData <- kddcupTest[,!names(kddcupTest) == "V42"]
+  kddTestLabels <- kddcupTest$V42
+  chiVals = c(256, 512, 1024)
+  generateRaport(kddData, kddTestData, kddTestLabels, chiVals)
+  dev.copy(png,'./docs/images/kdd_if.png')
+  dev.off()
 }

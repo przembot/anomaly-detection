@@ -1,19 +1,10 @@
+library(randomForest)
+library(e1071)
+library(caret)
+
+library(pROC)
+
 source("src/utils.R")
-
-evaluatePerformance = function(testDataLabels, prediction){
-  quality <- mean(prediction == testDataLabels)
-  cat("quality:",quality,"\n")
-
-  perf <- confusionMatrix(data = prediction,
-                          reference = testDataLabels,
-                          positive = "1")
-
-  print(perf)
-  sens = perf$table[2,2]*100/(perf$table[1,2]+perf$table[2,2])
-  spec = perf$table[1,1]*100/(perf$table[1,1]+perf$table[2,1])
-
-  c(sens, spec)
-}
 
 evaluate = function(trainData, testData, labelsColName, treeNum){
   # Prepare data
@@ -51,7 +42,7 @@ generateRaport = function(trainData, testData, labelsColName) {
   graphROC(qualities)
 }
 
-main = function() {
+rfMain = function() {
   kddcup$V3 = as.numeric(as.character(kddcup$V3))
 
   generateRaport(spectTrain, spectTest, "V1")

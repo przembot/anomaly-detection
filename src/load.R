@@ -56,11 +56,12 @@ factorize(kddcupTest, 2)
 factorize(kddcupTest, 3)
 factorize(kddcupTest, 4)
 
-kddcup <- data.frame(lapply(kddcup, as.numeric))
-kddcupTest <- data.frame(lapply(kddcupTest, as.numeric))
-
 # ignore attack kind
 # 0 - normal
 # 1 - abnormal
 kddcup[,42] = kddcup[,42] != 'normal.'
 kddcupTest[,42] = kddcupTest[,42] != 'normal.'
+
+
+kddcup <- data.frame(lapply(kddcup, as.numeric))
+kddcupTest <- data.frame(lapply(kddcupTest, as.numeric))
