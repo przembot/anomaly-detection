@@ -82,15 +82,21 @@ generateRaport = function(trainData, testData, labelsColName, parameter_value, i
   return(mean_quality)
 }
 
-q = evaluate(spectTrain, spectTest, "V1", 1, T, 'green')
+# q = evaluate(spectTrain, spectTest, "V1", 1, T, 'green')
 best_value = chooseBestParameter(spectTrain, spectTest, "V1")
 generateRaport(spectTrain, spectTest, "V1", best_value, 20)
+dev.copy(png,'../docs/image/spect_knn.png')
+dev.off()
 
 best_value = chooseBestParameter(pwebsitesTrain, pwebsitesTest, "Result")
 generateRaport(pwebsitesTrain, pwebsitesTest, "Result", best_value, 20)
+dev.copy(png,'../docs/image/pweb_knn.png')
+dev.off()
 
 best_value = chooseBestParameter(kddcup, kddcupTest, "V42")
 # Error: too many ties in knn
 #  too many points equidistant from the classifing point?
 generateRaport(kddcup, kddcupTest, "V42", best_value, 20)
+dev.copy(png,'../docs/image/kdd_knn.png')
+dev.off()
 

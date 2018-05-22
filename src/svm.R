@@ -66,6 +66,12 @@ generateRaport = function(trainData, testData, labelsColName) {
 
 main = function() {
   generateRaport(spectTrain, spectTest, "V1")
+  dev.copy(png,'../docs/image/spect_svm.png')
+  dev.off()
+  
   generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
+  dev.copy(png,'../docs/image/pweb_svm.png')
+  dev.off()
+  
   #generateRaport(kddcup, kddcupTest, "V42")
 }

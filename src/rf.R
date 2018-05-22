@@ -54,8 +54,13 @@ generateRaport = function(trainData, testData, labelsColName) {
 main = function() {
   kddcup$V3 = as.numeric(as.character(kddcup$V3))
 
-  # generateRaport(spectTrain, spectTest, "V1")
+  generateRaport(spectTrain, spectTest, "V1")
+  dev.copy(png,'../docs/image/spect_rf.png')
+  dev.off()
+  
   generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
+  dev.copy(png,'../docs/image/pweb_rf.png')
+  dev.off()
 
   # to avoid error: Can not handle categorical predictors with more than 53 categories.
   # V3 : Factor w/ 66 levels
