@@ -23,13 +23,23 @@ sample.ind <- sample(2,
                      prob = c(0.4,0.6))
 pwebsitesTrain <- pwebsites[sample.ind==1,]
 pwebsitesTest <- pwebsites[sample.ind==2,]
-table(pwebsitesTrain$Result)/nrow(pwebsitesTrain)
-table(pwebsitesTest$Result)/nrow(pwebsitesTest)
+
+# convert to format
+# 0 - normal
+# 1 - abnormal
+pwebsitesTrain[,1] <- pwebsitesTrain[,1] == -1 
+pwebsitesTest[,1] <- pwebsitesTest[,1] == -1 
 
 # SPECT heart
 # First column - label (0 or 1)
 spectTrain = read.csv(file="data/SPECT.train", header=FALSE)
 spectTest = read.csv(file="data/SPECT.test", header=FALSE)
+
+# after conversion
+# 0 - normal
+# 1 - abnormal
+spectTrain[,1] <- spectTrain[,1] == 0
+spectTest[,1] <- spectTest[,1] == 0
 
 # KDD Cup
 # Last column has labels
