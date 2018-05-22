@@ -7,26 +7,24 @@ library(pROC)
 # Data Preparation
 source("src/load.R")
 
-evaluatePerformance = function(testDataLabels, prediction, firstplot, color){
-  print(confusionMatrix(data = prediction,
-                        reference = testDataLabels))
+source("src/utils.R")
+
+evaluatePerformance = function(testDataLabels, prediction){
   quality <- mean(prediction == testDataLabels)
   cat("quality:",quality,"\n")
-  # ROC
-  rocObj <- roc(response = testDataLabels,
-                predictor = as.numeric(prediction),
-                percent=TRUE)
-  print(coords(rocObj, "best"))
-  plot(rocObj,
-       add=!firstplot,
-       grid=TRUE,
-       col=color,
-       print.thres="best",
-       main="ROC")
-  return(quality)
+
+  perf <- confusionMatrix(data = prediction,
+                          reference = testDataLabels,
+                          positive = "1")
+
+  print(perf)
+  sens = perf$table[2,2]*100/(perf$table[1,2]+perf$table[2,2])
+  spec = perf$table[1,1]*100/(perf$table[1,1]+perf$table[2,1])
+
+  c(sens, spec)
 }
 
-evaluate = function(trainData, testData, labelsColName, treeNum, firstplot, color){
+evaluate = function(trainData, testData, labelsColName, treeNum){
   # Prepare data
   trainData[,labelsColName] = as.factor(trainData[,labelsColName])
   testDataLabels = as.factor(testData[,labelsColName])
@@ -44,134 +42,33 @@ evaluate = function(trainData, testData, labelsColName, treeNum, firstplot, colo
   # Predict using the model
   testData$pred_randomforest<-predict(model,testData)
   # Accuracy of the model
-  quality <- evaluatePerformance(testDataLabels, testData$pred_randomforest, firstplot, color)
-  return(c(treeNum, quality))
+  quality <- evaluatePerformance(testDataLabels, testData$pred_randomforest)
+  quality
 }
 
 generateRaport = function(trainData, testData, labelsColName) {
   treeNums = c(50,100,200,300, 400, 500, 600, 700, 800, 900)
-  lineColors = rainbow(length(treeNums))
   qualities = matrix(nrow = length(treeNums),
                      ncol = 2)
-  
+
   for (i in 1:length(treeNums)) {
       qualities[i,] = evaluate(trainData,
-                               testData, 
-                               labelsColName, 
-                               treeNums[[i]], 
-                               i==1,
-                               lineColors[[i]])
+                               testData,
+                               labelsColName,
+                               treeNums[[i]])
   }
-  best_result = qualities[match(max(qualities[,2]), qualities[,2]),]
-  # best_result = qualities[qualities[,2]==max(qualities[,2]),]
-  cat("best result:", best_result)
-  return(best_result)
+  graphROC(qualities)
 }
 
 main = function() {
-  iterations = 10
-  result = matrix(nrow=iterations,ncol=2)
-  for(i in 1:iterations){
-    result[i,] = generateRaport(kddcup, kddcupTest, "V42")
-  }
-  tries = unique(result[,1])
-  for(i in tries){
-    print(i)
-    print(mean(result[result[,1]==i,2]))
-  }
-  as.data.frame(table(result[,1]))
-  
-  evaluate(spectTrain, spectTest, "V1", 50, T, 'green')
-  evaluate(pwebsitesTrain, pwebsitesTest, "Result", 100, T, 'green')
-  generateRaport(spectTrain, spectTest, "V1")
+  kddcup$V3 = as.numeric(as.character(kddcup$V3))
+
+  # generateRaport(spectTrain, spectTest, "V1")
   generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
+
   # to avoid error: Can not handle categorical predictors with more than 53 categories.
   # V3 : Factor w/ 66 levels
-  kddcup$V3 = as.numeric(as.character(kddcup$V3))
+  # kddcup$V3 = as.numeric(as.character(kddcup$V3))
   # Error in predict.randomForest(): New factor levels not present in the training data
-  generateRaport(kddcup, kddcupTest, "V42")
+  # generateRaport(kddcup, kddcupTest, "V42")
 }
-
-
-## SPECT
-str(spectTrain)
-
-# Make class variable as a factor (categorical)
-spectTrain$V1 = as.factor(spectTrain$V1)
-
-# Build the model
-model<-randomForest(V1 ~.,
-                    data=spectTrain,
-                    ntree=500,
-                    importance=T)
-
-# Summarize the model
-plot(model)
-summary(model)
-
-# Predict using the model
-spectTest$pred_randomforest<-predict(model,spectTest)
-
-# Accuracy of the model
-confusionMatrix(data = spectTest$pred_randomforest,
-                reference = as.factor(spectTest$V1))
-quality <- mean(spectTest$pred_randomforest == spectTest$V1)
-# train: 0.9375
-# test: 0.7754011
-rocObj <- roc(response = spectTest$V1,
-              predictor = as.numeric(as.character(spectTest$pred_randomforest)),
-              percent=TRUE)
-print(coords(rocObj, "best"))
-plot(rocObj,
-     grid=TRUE,
-     print.thres="best",
-     main="ROC")
-
-
-## PHISHING
-pwebsites$Result = as.factor(pwebsites$Result)
-trainSet <- pwebsitesTrain
-testSet <- pwebsitesTest
-
-# Build the model
-model<-randomForest(Result ~ .,
-                    data=trainSet,
-                    ntree=500,
-                    importance=T)
-plot(model)
-summary(model)
-
-# Predict using the model
-testSet$pred_randomforest<-predict(model,testSet)
-
-# Accuracy of the model
-confusionMatrix(data = testSet$pred_randomforest,
-                reference = as.factor(testSet$Result))
-quality <- mean(testSet$pred_randomforest == testSet$Result)
-# train: 0.9803709
-# test: 0.9604655
-
-
-## KDD CUP
-trainSet <- kddcup
-testSet <- kddcupTest
-trainSet$V42 = as.factor(trainSet$V42)
-testSet$V42 = as.factor(testSet$V42)
-
-# Build the model
-model<-randomForest(V42 ~ .,
-                    data=trainSet,
-                    ntree=500,
-                    importance=T)
-plot(model)
-summary(model)
-
-# Predict using the model
-testSet$pred_randomforest<-predict(model,testSet)
-
-# Accuracy of the model
-confusionMatrix(data = testSet$pred_randomforest,
-                reference = testSet$V42)
-quality <- mean(testSet$pred_randomforest == testSet$V42)
-# train: 
-# test: 
