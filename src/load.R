@@ -23,14 +23,14 @@ sample.ind <- sample(2,
                      replace = TRUE,
                      prob = c(0.4,0.6))
 
-pwebsitesTrain <- data.frame(lapply(pwebsites[sample.ind==1,], as.numeric))
-pwebsitesTest <- data.frame(lapply(pwebsites[sample.ind==2,], as.numeric))
-
 # convert to format
 # 0 - normal
 # 1 - abnormal
-pwebsitesTrain[,1] <- pwebsitesTrain[,1] == -1
-pwebsitesTest[,1] <- pwebsitesTest[,1] == -1
+pwebsites[,"Result"] <- pwebsites[,"Result"] == -1
+
+pwebsitesTrain <- data.frame(lapply(pwebsites[sample.ind==1,], as.numeric))
+pwebsitesTest <- data.frame(lapply(pwebsites[sample.ind==2,], as.numeric))
+
 
 # SPECT heart
 # First column - label (0 or 1)
