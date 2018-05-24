@@ -296,13 +296,13 @@ W pierwszym kroku, w celu dobrania najlepszej wartości parametru _k_, dla każd
 
 Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) nie udało się przeprowadzić klasyfikacji na zbiorze [KDD Cup 1999 Data].
 
-![](../images/knn_spect_parameters.pdf)
-![](../images/knn_pweb_parametry.pdf) 
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_spect_parameters.pdf)
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_pweb_parametry.pdf) 
 
 
 ### SVM
 W klasyfikacji algorytmem SVM wykorzystano radialną funkcję jądrową oraz jednoklasowy typ klasyfikacji (modelowanie klasy).
-[comment]: <>(this model tries to find the support of a distribution)
+<!(this model tries to find the support of a distribution)>
 Modyfikowany parametr _gamma_ jest parametrem funkcji radialnej i definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg). 
 
 | Dane              | gamma | quality   | specificity | sensitivity |
@@ -311,7 +311,7 @@ Modyfikowany parametr _gamma_ jest parametrem funkcji radialnej i definiuje wpł
 | Phishing Websites |       |  	    		|
 | KDD Cup 1999 Data |       |           |
 
-[comment]: <>(dlaczego takie beznadziejne wyniki?)
+<!(dlaczego takie beznadziejne wyniki?)>
 
 ### Las losowy
 Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby generowanych drzew. 
@@ -322,8 +322,8 @@ Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby genero
 | Phishing Websites | 300   | 0.9579439 |  0.9730     |  0.9391     |
 | KDD Cup 1999 Data |  50   | 0.9278138 |  0.9115     |  0.9952     |
 
-![](../images/spect_rf_2.pdf)
-![](../images/pweb_rf_2.pdf) 
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/spect_rf_2.pdf)
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/pweb_rf_2.pdf) 
 
 ### iForest
 
