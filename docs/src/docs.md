@@ -294,8 +294,10 @@ W pierwszym kroku, w celu dobrania najlepszej wartości parametru _k_, dla każd
 | Phishing Websites |  1  | 0.9537986 | 94.14368    | 96.45659    |
 | KDD Cup 1999 Data |  -  |    -      |     -       |     -       |
 
-Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) nie udało się przeprowadzić klasyfikacji na zbiorze [KDD Cup 1999 Data]. 
-WYKRESY: knn_spect_parameters.pdf, knn_pweb_paramtery.pdf
+Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) nie udało się przeprowadzić klasyfikacji na zbiorze [KDD Cup 1999 Data].
+
+![](../images/knn_spect_parameters.pdf)
+![](../images/knn_pweb_parametry.pdf) 
 
 
 ### SVM
@@ -320,8 +322,8 @@ Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby genero
 | Phishing Websites | 300   | 0.9579439 |  0.9730     |  0.9391     |
 | KDD Cup 1999 Data |  50   | 0.9278138 |  0.9115     |  0.9952     |
 
-WYKRESY: spect_rf_2.pdf, pweb_rf_2.pdf
-
+![](../images/spect_rf_2.pdf)
+![](../images/pweb_rf_2.pdf) 
 
 ### iForest
 
