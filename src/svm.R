@@ -10,9 +10,11 @@ evaluate = function(trainData, testData, labelsColName, gamma) {
   varNames <- varNames[!varNames %in% c(labelsColName)]
   varNames1 <- paste(varNames, collapse = "+")
   rf.form <- as.formula(paste(labelsColName, varNames1, sep = " ~ "))
-  testDataLabels = as.factor(testData[,labelsColName])
+  # testDataLabels = as.factor(testData[,labelsColName])
+  testDataLabels = testData[,labelsColName]
   testData[,labelsColName] <- NULL
-  trainData[,labelsColName] <- as.factor(trainData[,labelsColName])
+  # trainData[,labelsColName] <- as.factor(trainData[,labelsColName])
+  trainData[,labelsColName] <- trainData[,labelsColName]
   # Build the model
   model <- svm(rf.form,
                data = trainData,

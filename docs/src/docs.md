@@ -224,10 +224,8 @@ który ma znaczenie jak w przypadku algorytmu k-NN.
 ### SVM
 Do uruchomienia algorytmu SVM należy podać:
 * typ (klasyfikacja / regresja / wykrywanie anomalii (klasyfikacja jednoklasowa))
-* funkcja jądrowa (liniowa / wielomianowa / radialna funkcja bazowa / funkcja sigmoidalna )
-* parametry
-    - gamma - definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg),
-    - nu - jest górną granicą przykładów treningowych w stosunku do ich całkowitej liczby (przykładowo, wartość 0.05 gwarantuje, że co najwyżej 5% przykładów treningowych będzie niepoprawnie zaklasyfikowanych (w skutek małego marginesu) i conajmniej 5% przykładów treningowych będzie wektorami nośnymi).
+* nazwę funkcji jądrowej (liniowa / wielomianowa / radialna / sigmoidalna )
+* parametry (zależnie od wybranego typu i funkcji jądrowej).
 
 ### Las losowy
 Parametry etapu uczenia:
@@ -248,7 +246,15 @@ Parametry etapu oceny:
 W celu ocenienia modeli zostanie wykorzystany
 zbiór testowy. Miarę jakości stanowić
 będzie stosunek poprawnie sklasyfikowanych
-przykładów do jej całkowitej ilości.
+przykładów do jej całkowitej ilości, nazywany dalej _quality_.
+Dodatkowo pod uwagę brane będą takie metryki jak 
+czułość (_sensitivity_), czyli stosunek wyników 
+prawdziwie dodatnich do sumy prawdziwie dodatnich 
+i fałszywie ujemnych i swoistość (_specificity_), czyli
+stosunek wyników prawdziwie ujemnych do sumy 
+prawdziwie ujemnych i fałszywie dodatnich.
+Przy detekcji anomalii będzie nam szczególnie zależeć na maksymalizowaniu
+czułości, by jak najwięcej wartości odstających zostało wykrytych.
 
 Procedura oceny polegać będzie na wytrenowaniu modelu
 używając danych ze zbioru trenującego, po czym
@@ -275,81 +281,47 @@ będącej powyżej.
 
 ## Zmiana algorytmu porównawnczego
 
-LOF -> random forest
-opis random forest wraz z jego parametrami
+W dokumentacji wstępnej planowano wykorzystanie do badań algorytmu LOF, w trakcie realizacji projektu postanowiono jednak zastąpić go algorytmem lasu losowego. Wykorzytanie algorytmu wykorzystującego drzewa decyzyjne powinno pozwolić na dokłądniejsze porównanie i ocenę działania implementowanego algorytmu lasu izolacji.
 
 ## Uzyskane wyniki
 
 ### k-NN
-Wartości w tabeli: średnia jakość dla 20 testów
+W pierwszym kroku, w celu dobrania najlepszej wartości parametru _k_, dla każdego zbioru danych przeprowadzono klasyfikację z nieparzystymi liczbami sąsiadów biorących udział w głosowaniu w przedziale 1-9. Następnie, dla wybranego _k_, dokonano klasyfikacji 20-krotnie ze względu na losowy wybór sąsiada przez algorytm w przypadku remisów (kilka próbek o tej samej wartości atrybutu). Wyniki (wartości średnie) przedstawione są w tabeli.
 
 | Dane              |  k  | quality   | specificity | sensitivity |
 | ----------------- |:---:| :--------:|:-----------:|:-----------:|
-| SPECT Heart       |  1  | 0.6550802 |
-|                   |  3  |           |             |             |
-|                   |  5  |           |             |             |
-|                   |  7  |           |             |             |
-|                   |  9  |           |             |             |
-| Phishing Websites |  1  | 0.9410098 |
-| KDD Cup 1999 Data |     |           |
+| SPECT Heart       |  3  | 0.6187166 | 91.0000000  | 59.3313953  |
+| Phishing Websites |  1  | 0.9537986 | 94.14368    | 96.45659    |
+| KDD Cup 1999 Data |  -  |    -      |     -       |     -       |
 
-1) SPECT Heart
-  k   quality threshold specificity sensitivity  fall-out
-1 1 0.6684492       1.5    80.00000    65.69767 0.5086207
-2 3 0.6363636       1.5    93.33333    61.04651 0.6320755
-3 5 0.6203209       1.5    86.66667    59.88372 0.6571429
-4 7 0.5721925       1.5    86.66667    54.65116 0.8125000
-5 9 0.5614973       1.5    93.33333    52.90698 0.8804348
+Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) nie udało się przeprowadzić klasyfikacji na zbiorze [KDD Cup 1999 Data]. 
+WYKRESY: knn_spect_parameters.pdf, knn_pweb_paramtery.pdf
+
 
 ### SVM
+W klasyfikacji algorytmem SVM wykorzystano radialną funkcję jądrową oraz jednoklasowy typ klasyfikacji (modelowanie klasy).
+[comment]: <>(this model tries to find the support of a distribution)
+Modyfikowany parametr _gamma_ jest parametrem funkcji radialnej i definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg). 
 
-| Dane              | gamma | quality   |
-| ----------------- |:-----:| :--------:|
+| Dane              | gamma | quality   | specificity | sensitivity |
+| ----------------- |:-----:| :--------:|:-----------:|:-----------:|
 | SPECT Heart       |   1   | 0.6363636	|
 | Phishing Websites |       |  	    		|
 | KDD Cup 1999 Data |       |           |
 
-### random forest
+[comment]: <>(dlaczego takie beznadziejne wyniki?)
 
-| Dane              | ntree | quality   |
-| ----------------- |:-----:| :--------:|
-| SPECT Heart       |  200  | 0.774167  |
-| Phishing Websites |  200  | 0.9622677 |
-| KDD Cup 1999 Data |       |           |
+### Las losowy
+Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby generowanych drzew. 
 
-1) SPECT Heart: wybór liczby drzew
-   ntree  Freq  Quality
-1    50   10    0.7796791
-2   100    6    0.7789661
-3   200    5    0.7754011
-4   300    8    0.7760695
-5   400    6    0.7771836
-6   500    5    0.7786096
-7   600    4    0.7820856
-8   700    3    0.7771836
-9   800    1    0.7807487
-10  900    2    0.7807487
+| Dane              | ntree | quality   | specificity | sensitivity |
+| ----------------- |:-----:| :--------:|:-----------:|:-----------:|
+| SPECT Heart       |  50   | 0.7914439 |  0.7907     |  0.8000     |
+| Phishing Websites | 300   | 0.9579439 |  0.9730     |  0.9391     |
+| KDD Cup 1999 Data |  50   | 0.9278138 |  0.9115     |  0.9952     |
 
-Najlepszy wynik dla ntree=50
-![alt text][roc_spect_rf_50]
+WYKRESY: spect_rf_2.pdf, pweb_rf_2.pdf
 
-2) Phishing Websites
-   ntree Freq   Quality
-1    50    5    0.9576645
-2   100    9    0.9578723
-3   200    7    0.9573886
-4   300    4    0.9575664
-5   400    4    0.9576418
-6   500    1    0.957755
-7   600    7    0.9575394
-8   700    4    0.9573778
-9   800    7    0.9576257
-10  900    2    0.9576795
-
-ntree   quality         freq
-100     0.9626097       14
-50      0.9624584       9
-200     0.9622677       27
 
 ### iForest
 
@@ -361,14 +333,12 @@ ntree   quality         freq
 |                   |       |  32   | 0.5357939 | 59.3023256  | 86.6666667  |
 |                   |  30   |  16   | 0.5310449 | 62.7906977  | 86.6666667  |
 |                   |       |  32   | 0.5184741 | 66.8604651  | 80.0000000  |
-| ----------------- |-------|-------|-----------|-------------|-------------|
 | Phishing Websites |  10   |  512  | 0.4643239 | 51.1065713  | 73.7895591  |
 |                   |       | 1024  | 0.4589275 | 55.3966633  | 75.3043008  |
 |                   |  20   |  512  | 0.433846  | 38.236296   | 80.714093   |
 |                   |       |  1024 | 0.4628417 | 52.1961185  | 72.5994049  |
 |                   |  30   |  512  | 0.4527375 | 48.1784133  |74.4657831   |
 |                   |       |  1024 | 0.4360358 | 45.2162070  |76.9001893   |
-| ----------------- |-------|-------|-----------|-------------|-------------|
 | KDD Cup 1999 Data |  10   |  256  | 0.6632955 | 98.7737858  | 75.7674615  | (czerwony)
 |                   |       |  512  | 0.5748165 | 98.6302048  | 65.0206041  | (pomarańczowy) 
 |                   |       | 1024  | 0.6151281 | 98.8497021  | 87.5744701  | (zielony jasny) 
@@ -391,8 +361,3 @@ ntree   quality         freq
 [wphish]: https://archive.ics.uci.edu/ml/datasets/Website+Phishing
 [phishw]: https://archive.ics.uci.edu/ml/datasets/Phishing+Websites
 [kdd]: http://archive.ics.uci.edu/ml/datasets/kdd+cup+1999+data
-
-
-[roc_spect_rf_50]: 
-https://github.com/przembot/mow-projekt/raw/master/docs/images/roc_spec_rf_50.pdf
-"roc_spect_rf_50"
