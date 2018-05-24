@@ -296,6 +296,11 @@ W pierwszym kroku, w celu dobrania najlepszej wartości parametru _k_, dla każd
 
 Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) nie udało się przeprowadzić klasyfikacji na zbiorze [KDD Cup 1999 Data].
 
+<object data="https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_spect_parameters.pdf" 
+        type="application/pdf" 
+        width="700px" 
+        height="700px"/>
+
 ![](https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_spect_parameters.pdf)
 ![](https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_pweb_parametry.pdf) 
 
