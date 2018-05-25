@@ -1,3 +1,7 @@
+# use JIT
+require(compiler)
+enableJIT(3)
+
 # Load all the data..
 source("src/load.R")
 
