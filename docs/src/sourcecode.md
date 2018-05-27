@@ -53,13 +53,14 @@ W każdym module z algorytmem znajduje się:
 ## Opis modułów
 
 ### src/load.R
-Skrypt odpowiada za wczytanie i wstępne przetworzenie danych (m.in. podział na zbiory treningowy i testowy, rozłożenie na czynniki danych nienumerycznych).
+Moduł odpowiada za wczytanie i wstępne przetworzenie danych (m.in. podział na zbiory treningowy i testowy, rozłożenie na czynniki danych nienumerycznych).
 
 ### src/utils.R
 Moduł zawierający pomocnicze funkcje, w tym funkcje rysującą wykres ROC.
 
 ### src/knn.R
-Program realizuje algorytm k-najbliższych sąsiadów przy wykorzystaniu biblioteki _class_. W ramach skryptu algorytm testowany jest z różnymi wartościami parametru _k_ na wszystkich zbiorach danych. 
+Moduł realizuje algorytm k-najbliższych sąsiadów przy wykorzystaniu biblioteki _class_. 
+Funkcja _chooseBestParameter_ przyjmuje zbiór uczący, testowy, nazwę kolumny zawierającą etykiety (zarówno w zbiorze uczącym jak i testowym) oraz tablicę wartości k, z których ma zostać wybrany najlepszy (pod względem metryki _quality_). Wraz z najlepszą wartością parametru _k_ funkcja wyświelta punkty krzywej ROC (dzięki wykorzystaniu funkcji _evaluatePerformance_). 
 
 ### src/svm.R
 Program realizuje jednoklasową klasyfikację przy pomocy maszyny wektorów nośnych _SVM_ przy wykorzystaniu biblioteki _e1071_.

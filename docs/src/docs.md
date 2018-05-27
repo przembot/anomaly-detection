@@ -294,32 +294,42 @@ W pierwszym kroku, w celu dobrania najlepszej wartości parametru _k_, dla każd
 | Phishing Websites |  1  | 0.9537986 | 94.14368    | 96.45659    |
 | KDD Cup 1999 Data |  -  |    -      |     -       |     -       |
 
-Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) nie udało się przeprowadzić klasyfikacji na zbiorze [KDD Cup 1999 Data].
+Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) nie udało się przeprowadzić klasyfikacji na zbiorze KDD Cup 1999 Data.
 
-<object data="https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_spect_parameters.pdf" 
+<!--object data="https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_spect_parameters.pdf" 
         type="application/pdf" 
         width="700px" 
-        height="700px"/>
+        height="700px"/-->
 
 ![](https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_spect_parameters.pdf)
 ![](https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_pweb_parametry.pdf) 
 
 
 ### SVM
-W klasyfikacji algorytmem SVM wykorzystano radialną funkcję jądrową oraz jednoklasowy typ klasyfikacji (modelowanie klasy).
-<!(this model tries to find the support of a distribution)>
-Modyfikowany parametr _gamma_ jest parametrem funkcji radialnej i definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg). 
+W detekcji anomalii metodą maszyn wektorów nośnych w pierwszej kolejności wykorzystano radialną funkcję jądrową (najczęściej stosowaną) oraz jednoklasowy typ klasyfikacji (modelowanie klasy). Podobnie jak w przypadku poprzedniego algorytmu, przetestowano działanie metody na zbiorze testowym dla różnych wartości parametru _gamma_.
+Modyfikowany parametr _gamma_ jest parametrem funkcji jądrowej i definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg). Wyniki przeprowadzonych testów przedstawione są na wykresach 
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/spect_svm.png)
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/pweb_svm.png) 
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/kdd_svm_radial.pdf)
 
-| Dane              | gamma | quality   | specificity | sensitivity |
-| ----------------- |:-----:| :--------:|:-----------:|:-----------:|
-| SPECT Heart       |   1   | 0.6363636	|
-| Phishing Websites |       |  	    		|
-| KDD Cup 1999 Data |       |           |
+Z powodu niezadowalających wyników działania algorytmu dla dwóch pierwszych zbiorów danych postanowiono zmienić funkcję jądrową na funkcję wielomianową. Ponownie, na tych samych zbiorach danych, przeprowadzono testy dla różnych stopni wielomianu.
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/spect_svm_linear.pdf)
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/pweb_svm_polynominal.pdf) 
 
-<!(dlaczego takie beznadziejne wyniki?)>
+Ostatecznie, najlepsze osiągnięte wyniki:
+
+| Dane              | funkcja jądrowa | parametr  | quality   | specificity | sensitivity |
+| ----------------- |:---------------:| :--------:| :--------:|:-----------:|:-----------:|
+| SPECT Heart       | liniowa         |    brak   | 0.8342246 |  0.8488     |    0.6667   |       
+| Phishing Websites | wielomianowa    | degree=4  | 0.6951872 |  0.6977     |    0.6667   |   
+| KDD Cup 1999 Data |  radialna       | gamma=0.5 | 0.9106    |  0.8983     |    1.0000   |
+
+
+ 
 
 ### Las losowy
 Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby generowanych drzew. 
+W tabeli zamiesznono wartości parametrów, dla których algorytm osiąga najlepsze wartości dla przyjętych metryk.
 
 | Dane              | ntree | quality   | specificity | sensitivity |
 | ----------------- |:-----:| :--------:|:-----------:|:-----------:|
@@ -334,33 +344,16 @@ Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby genero
 
 | Dane              | ntree | chi   | threshold | specificity | sensitivity |
 | ----------------- |:-----:|:-----:|:---------:|:-----------:|:-----------:|
-| SPECT Heart       |  10   |  16   | 0.5293705   72.6744186    73.3333333
-|                   |       |  32   | 0.3973346 | 95.9302326  | 46.6666667  |
-|                   |  20   |  16   | 0.4401018 | 96.5116279  | 53.3333333  |
-|                   |       |  32   | 0.5357939 | 59.3023256  | 86.6666667  |
-|                   |  30   |  16   | 0.5310449 | 62.7906977  | 86.6666667  |
-|                   |       |  32   | 0.5184741 | 66.8604651  | 80.0000000  |
-| Phishing Websites |  10   |  512  | 0.4643239 | 51.1065713  | 73.7895591  |
-|                   |       | 1024  | 0.4589275 | 55.3966633  | 75.3043008  |
-|                   |  20   |  512  | 0.433846  | 38.236296   | 80.714093   |
-|                   |       |  1024 | 0.4628417 | 52.1961185  | 72.5994049  |
-|                   |  30   |  512  | 0.4527375 | 48.1784133  |74.4657831   |
-|                   |       |  1024 | 0.4360358 | 45.2162070  |76.9001893   |
-| KDD Cup 1999 Data |  10   |  256  | 0.6632955 | 98.7737858  | 75.7674615  | (czerwony)
-|                   |       |  512  | 0.5748165 | 98.6302048  | 65.0206041  | (pomarańczowy) 
-|                   |       | 1024  | 0.6151281 | 98.8497021  | 87.5744701  | (zielony jasny) 
-|                   |  20   |  256  | 0.6430909 | 97.4551516  | 88.2748487  | (intensywna zieleń)
-|                   |       |  512  | 0.6403327 | 98.9223178  | 88.5755243  | (turkus)
-|                   |       | 1024  | 0.6028357 | 99.2721932  | 88.4509416  | (błękitny)
-|                   |  30   |  256  | 0.6448761 | 98.1416995  | 87.7166222  | (niebieski) 
-|                   |       |  512  | 0.6310819 | 98.9602759  | 88.4980594  | (fiolet)
-|                   |       | 1024  | 0.6008201 | 98.9338702  | 88.4489450  | (magenta)
+| SPECT Heart       |  30   |  16   | 0.5310449 | 62.7906977  | 86.6666667  |
+| Phishing Websites |  20   |  512  | 0.433846  | 38.236296   | 80.714093   |
+| KDD Cup 1999 Data |  20   |  512  | 0.6403327 | 98.9223178  | 88.5755243  |(turkus)
 
-
-
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/spect_if.png) 
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/pweb_if.png) 
+![](https://github.com/przembot/mow-projekt/raw/master/docs/images/kdd_if.png) 
 
 ## Wnioski z wyników
-
+Na podstawie przeprowadzonych badań należy
 
 # Bibliografia
 

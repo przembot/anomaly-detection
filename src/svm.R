@@ -10,16 +10,15 @@ evaluate = function(trainData, testData, labelsColName, gamma) {
   varNames <- varNames[!varNames %in% c(labelsColName)]
   varNames1 <- paste(varNames, collapse = "+")
   rf.form <- as.formula(paste(labelsColName, varNames1, sep = " ~ "))
-  # testDataLabels = as.factor(testData[,labelsColName])
   testDataLabels = testData[,labelsColName]
   testData[,labelsColName] <- NULL
-  # trainData[,labelsColName] <- as.factor(trainData[,labelsColName])
   trainData[,labelsColName] <- trainData[,labelsColName]
   # Build the model
   model <- svm(rf.form,
                data = trainData,
                type='one-classification',
                gamma=gamma,
+               # degree = 3,
                scale=FALSE, # do not scale each feature
                kernel="radial")
   print(summary(model))
@@ -45,12 +44,14 @@ generateRaport = function(trainData, testData, labelsColName) {
 
 svmMain = function() {
   generateRaport(spectTrain, spectTest, "V1")
-  dev.copy(png,'./docs/images/spect_svm.png')
+  dev.copy(pdf,'./docs/images/spect_svm_linear.pdf')
   dev.off()
   
   generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
-  dev.copy(png,'./docs/images/pweb_svm.png')
+  dev.copy(pdf,'./docs/images/pweb_svm_polynomial.pdf')
   dev.off()
   
-  #generateRaport(kddcup, kddcupTest, "V42")
+  #generateRaport(kddcup[1:8000,], kddcupTest[1:10000,], "V42")
+  dev.copy(pdf,'./docs/images/kdd_svm_radial.pdf')
+  dev.off()
 }
