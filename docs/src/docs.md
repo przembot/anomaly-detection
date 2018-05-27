@@ -91,7 +91,7 @@ do tej klasy oznaczać będzie, że punkt jest anomalią.
 
 ### Random Forest - las losowy
 
-Działanie lasów losowych polega na klasyfikacji za pomoca grupy drzew decyzyjnych. Końcowa decyzja jest podejmowana w wyniku
+Działanie lasów losowych polega na klasyfikacji za pomocą grupy drzew decyzyjnych. Końcowa decyzja jest podejmowana w wyniku
 głosowania większościowego nad klasami wskazanymi przez poszczególne drzewa decyzyjne. Każde z drzew konstruowane jest przez wylosowanie ze zwracaniem _N_ obiektów z zbioru uczącego o liczności _N_. W każdym węźle podział jest dokonywany jedynie na podstawie _k_ losowo wybranych cech. Ich liczba jest znacznie mniejsza od liczby wszystkich cech. Dzięki tej własności lasy losowe mogą być stosowane w problemach o dużej liczbie cech.
 
 # Plan badań
@@ -279,9 +279,9 @@ nie będziemy w stanie obsłużyć tak dużej ilości atrybutów.
 Ta część dokumentacji opisuje działania podjęte po oddaniu wstępnej dokumentacji,
 będącej powyżej.
 
-## Zmiana algorytmu porównawnczego
+## Zmiana algorytmu porównawczego
 
-W dokumentacji wstępnej planowano wykorzystanie do badań algorytmu LOF, w trakcie realizacji projektu postanowiono jednak zastąpić go algorytmem lasu losowego. Wykorzytanie algorytmu wykorzystującego drzewa decyzyjne powinno pozwolić na dokłądniejsze porównanie i ocenę działania implementowanego algorytmu lasu izolacji.
+W dokumentacji wstępnej planowano wykorzystanie do badań algorytmu LOF, w trakcie realizacji projektu postanowiono jednak zastąpić go algorytmem lasu losowego. Wykorzystanie algorytmu wykorzystującego drzewa decyzyjne powinno pozwolić na dokładniejsze porównanie i ocenę działania implementowanego algorytmu lasu izolacji.
 
 ## Uzyskane wyniki
 
@@ -308,7 +308,7 @@ Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) n
 
 ### SVM
 W detekcji anomalii metodą maszyn wektorów nośnych w pierwszej kolejności wykorzystano radialną funkcję jądrową (najczęściej stosowaną) oraz jednoklasowy typ klasyfikacji (modelowanie klasy). Podobnie jak w przypadku poprzedniego algorytmu, przetestowano działanie metody na zbiorze testowym dla różnych wartości parametru _gamma_.
-Modyfikowany parametr _gamma_ jest parametrem funkcji jądrowej i definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg). Wyniki przeprowadzonych testów przedstawione są na wykresach 
+Modyfikowany parametr _gamma_ jest parametrem funkcji jądrowej i definiuje wpływ pojedynczego przykładu trenującego (niska wartość oznacza daleki zasięg). Wyniki przeprowadzonych testów przedstawione są na wykresach 
 
 ![Analiza ROC, SVM, zbiór SPECT](images/spect_svm.png)
 
@@ -334,8 +334,8 @@ Ostatecznie, najlepsze osiągnięte wyniki:
  
 
 ### Las losowy
-Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby generowanych drzew. 
-W tabeli zamiesznono wartości parametrów, dla których algorytm osiąga najlepsze wartości dla przyjętych metryk.
+Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby generowanych drzew.
+W tabeli zamieszcznono wartości parametrów, dla których algorytm osiąga najlepsze wartości dla przyjętych metryk.
 
 | Dane              | ntree | quality   | specificity | sensitivity |
 | ----------------- |:-----:| :--------:|:-----------:|:-----------:|
