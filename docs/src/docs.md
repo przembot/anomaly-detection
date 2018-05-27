@@ -232,7 +232,7 @@ Parametry etapu uczenia:
 * liczba drzew _ntree_
 
 ### Las izolacji
-Parametry etapu uczenia:
+Parametry etapu uczenia:j
 
 * liczba drzew _t_
 * rozmiar zbioru uczącego $\psi$
@@ -301,20 +301,26 @@ Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) n
         width="700px" 
         height="700px"/-->
 
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_spect_parameters.pdf)
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_pweb_parametry.pdf) 
+![Analiza ROC, k-nn, zbiór SPECT](images/knn_spect_parameters.pdf)
+
+![Analiza ROC, k-nn, zbiór Phishing Websites](images/knn_pweb_parametry.pdf)
 
 
 ### SVM
 W detekcji anomalii metodą maszyn wektorów nośnych w pierwszej kolejności wykorzystano radialną funkcję jądrową (najczęściej stosowaną) oraz jednoklasowy typ klasyfikacji (modelowanie klasy). Podobnie jak w przypadku poprzedniego algorytmu, przetestowano działanie metody na zbiorze testowym dla różnych wartości parametru _gamma_.
 Modyfikowany parametr _gamma_ jest parametrem funkcji jądrowej i definiuje wpływ pojedyńczego przykładu trenującego (niska wartość oznacza daleki zasięg). Wyniki przeprowadzonych testów przedstawione są na wykresach 
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/spect_svm.png)
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/pweb_svm.png) 
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/kdd_svm_radial.pdf)
+
+![Analiza ROC, SVM, zbiór SPECT](images/spect_svm.png)
+
+![Analiza ROC, SVM, zbiór Phishing Websites](images/pweb_svm.png)
+
+![Analiza ROC, SVM, zbiór KDD](images/kdd_svm_radial.pdf)
 
 Z powodu niezadowalających wyników działania algorytmu dla dwóch pierwszych zbiorów danych postanowiono zmienić funkcję jądrową na funkcję wielomianową. Ponownie, na tych samych zbiorach danych, przeprowadzono testy dla różnych stopni wielomianu.
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/spect_svm_linear.pdf)
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/pweb_svm_polynominal.pdf) 
+
+![Analiza ROC, SVM (jądro liniowe), SPECT](images/spect_svm_linear.pdf)
+
+![Analiza ROC, SVM (jądro wielomianowe), Phishing Websites](images/pweb_svm_polynomial.pdf)
 
 Ostatecznie, najlepsze osiągnięte wyniki:
 
@@ -337,8 +343,9 @@ W tabeli zamiesznono wartości parametrów, dla których algorytm osiąga najlep
 | Phishing Websites | 300   | 0.9579439 |  0.9730     |  0.9391     |
 | KDD Cup 1999 Data |  50   | 0.9278138 |  0.9115     |  0.9952     |
 
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/spect_rf_2.pdf)
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/pweb_rf_2.pdf) 
+![Analiza ROC, RF, zbiór SPECT](images/spect_rf_2.pdf)
+
+![Analiza ROC, RF, zbiór Phishing Websites](images/pweb_rf_2.pdf)
 
 ### iForest
 
@@ -348,9 +355,11 @@ W tabeli zamiesznono wartości parametrów, dla których algorytm osiąga najlep
 | Phishing Websites |  20   |  512  | 0.433846  | 38.236296   | 80.714093   |
 | KDD Cup 1999 Data |  20   |  512  | 0.6403327 | 98.9223178  | 88.5755243  |(turkus)
 
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/spect_if.png) 
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/pweb_if.png) 
-![](https://github.com/przembot/mow-projekt/raw/master/docs/images/kdd_if.png) 
+![Analiza ROC, iForest, zbiór SPECT](images/spect_if.png)
+
+![Analiza ROC, iForest, zbiór Phishing Websites](images/pweb_if.png)
+
+![Analiza ROC, iForest, zbiór KDD](images/kdd_if.png)
 
 ## Wnioski z wyników
 Na podstawie przeprowadzonych badań należy
