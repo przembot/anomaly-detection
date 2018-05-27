@@ -60,7 +60,7 @@ Moduł zawierający pomocnicze funkcje, w tym funkcje rysującą wykres ROC.
 
 ### src/knn.R
 Moduł realizuje algorytm k-najbliższych sąsiadów przy wykorzystaniu biblioteki _class_. 
-Funkcja _chooseBestParameter_ przyjmuje zbiór uczący, testowy, nazwę kolumny zawierającą etykiety (zarówno w zbiorze uczącym jak i testowym) oraz tablicę wartości k, z których ma zostać wybrany najlepszy (pod względem metryki _quality_). Wraz z najlepszą wartością parametru _k_ funkcja wyświelta punkty krzywej ROC (dzięki wykorzystaniu funkcji _evaluatePerformance_). 
+Funkcja _chooseBestParameter_ przyjmuje zbiór uczący, testowy, nazwę kolumny zawierającą etykiety (zarówno w zbiorze uczącym jak i testowym) oraz tablicę wartości k, z których ma zostać wybrany najlepszy (pod względem metryki _quality_). Wraz z najlepszą wartością parametru _k_ funkcja wyświetla punkty krzywej ROC (dzięki wykorzystaniu funkcji _evaluatePerformance_). 
 
 ### src/svm.R
 Program realizuje jednoklasową klasyfikację przy pomocy maszyny wektorów nośnych _SVM_ przy wykorzystaniu biblioteki _e1071_.
