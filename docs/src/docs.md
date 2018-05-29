@@ -296,18 +296,13 @@ W pierwszym kroku, w celu dobrania najlepszej wartości parametru _k_, dla każd
 
 Z powodu bardzo wielu remisów (nawet przy dużych wartościach parametru _k_) nie udało się przeprowadzić klasyfikacji na zbiorze KDD Cup 1999 Data.
 
-<!--object data="https://github.com/przembot/mow-projekt/raw/master/docs/images/knn_spect_parameters.pdf" 
-        type="application/pdf" 
-        width="700px" 
-        height="700px"/-->
-
 ![Analiza ROC, k-nn, zbiór SPECT](images/knn_spect_parameters.pdf)
 
 ![Analiza ROC, k-nn, zbiór Phishing Websites](images/knn_pweb_parametry.pdf)
 
 
 ### SVM
-W detekcji anomalii metodą maszyn wektorów nośnych w pierwszej kolejności wykorzystano radialną funkcję jądrową (najczęściej stosowaną) oraz jednoklasowy typ klasyfikacji (modelowanie klasy). Podobnie jak w przypadku poprzedniego algorytmu, przetestowano działanie metody na zbiorze testowym dla różnych wartości parametru _gamma_.
+W detekcji anomalii metodą maszyn wektorów nośnych w pierwszej kolejności wykorzystano radialną funkcję jądrową (najczęściej stosowaną) oraz jednoklasowy typ klasyfikacji (modelowanie klasy). Podobnie jak w przypadku poprzedniego algorytmu, przetestowano działanie metody na zbiorze testowym dla wartości parametru _gamma_ {0.1, 0.125, 0.2, 0.25, 0.5, 0.8, 1} (kolejne wartości na wykresie są oznaczone kolejnymi kolorami tęczy).
 Modyfikowany parametr _gamma_ jest parametrem funkcji jądrowej i definiuje wpływ pojedynczego przykładu trenującego (niska wartość oznacza daleki zasięg). Wyniki przeprowadzonych testów przedstawione są na wykresach 
 
 ![Analiza ROC, SVM, zbiór SPECT](images/spect_svm.png)
@@ -316,7 +311,7 @@ Modyfikowany parametr _gamma_ jest parametrem funkcji jądrowej i definiuje wpł
 
 ![Analiza ROC, SVM, zbiór KDD](images/kdd_svm_radial.pdf)
 
-Z powodu niezadowalających wyników działania algorytmu dla dwóch pierwszych zbiorów danych postanowiono zmienić funkcję jądrową na funkcję wielomianową. Ponownie, na tych samych zbiorach danych, przeprowadzono testy dla różnych stopni wielomianu.
+Z powodu niezadowalających wyników działania algorytmu dla dwóch pierwszych zbiorów danych postanowiono zmienić funkcję jądrową na funkcję wielomianową. Ponownie, na tych samych zbiorach danych, przeprowadzono testy dla  stopni wielomianu od 2 do 6.
 
 ![Analiza ROC, SVM (jądro liniowe), SPECT](images/spect_svm_linear.pdf)
 
@@ -348,22 +343,31 @@ W tabeli zamieszcznono wartości parametrów, dla których algorytm osiąga najl
 ![Analiza ROC, RF, zbiór Phishing Websites](images/pweb_rf_2.pdf)
 
 ### iForest
+W ostatnim etapie badań sprawdzono jakość działania zaimplementowanego algorytmu detekcji anomalii lasu izolacyjnego. Wykresy ROC dla różnych wartości parametrów _ntree_ i  _chi_ przedstawione są na rysunkach \ref{pweb_if}, \ref{spect_if} i \ref{kdd_if}.
+Najlepsze wyniki zamieszczono w tabeli.
 
-| Dane              | ntree | chi   | threshold | specificity | sensitivity |
-| ----------------- |:-----:|:-----:|:---------:|:-----------:|:-----------:|
-| SPECT Heart       |  30   |  16   | 0.5310449 | 62.7906977  | 86.6666667  |
-| Phishing Websites |  20   |  512  | 0.433846  | 38.236296   | 80.714093   |
-| KDD Cup 1999 Data |  20   |  512  | 0.6403327 | 98.9223178  | 88.5755243  |(turkus)
+| Dane              | ntree | chi   | threshold | specificity | sensitivity | kolor  |
+| ----------------- |:-----:|:-----:|:---------:|:-----------:|:-----------:|:------:|
+| SPECT Heart       |  30   |  32   | 0.5130554 | 73.8372093  | 73.3333333  | fiolet |
+| Phishing Websites |  10   |  1024 | 0.5186933 | 73.2649203  | 74.4273504  | zółty  |
+| KDD Cup 1999 Data |  30   |  512  | 0.4824599 | 97.0161570  | 91.8126787  | fiolet |
 
-![Analiza ROC, iForest, zbiór SPECT](images/spect_if.png)
+![Analiza ROC, iForest, zbiór SPECT \label{spect_if}](images/spect_if.png)
 
-![Analiza ROC, iForest, zbiór Phishing Websites](images/pweb_if.png)
+![Analiza ROC, iForest, zbiór Phishing Websites \label{pweb_if}](images/pweb_if.png)
 
-![Analiza ROC, iForest, zbiór KDD](images/kdd_if.png)
+![Analiza ROC, iForest, zbiór KDD \label{kdd_if}](images/kdd_if.png)
 
 ## Wnioski z wyników
-Na podstawie przeprowadzonych badań należy
+W ramach projektu zaimplementowano algorytm lasu izlolacji iForest w języku R. 
+Na podstawie wykonanych testów należy stwierdzić, że algorytm z powodzeniem spełnia swoje przeznaczenie. 
+Algorytm ten, podobnie jak las losowy, stworzył model, który dla zbioru KDD Cup 1999 Data na wykresie ROC znalazł punkt w okolicy optymalnego (100%,100%).
 
+Algorytm wypada gorzej dla zbioru Phishing Websites, natomiast tworzy model lepszy od SVM.
+Dla tego zbioru danych najlepsze rezultaty udało się osiągnąć algorytmami k-NN i RF.
+
+Analiza wykresu krzywej ROC dla zbioru SPECT Heart sugeruje, że wszystkie badane algorytmy osiągnęły zbliżoną jakość. 
+Prawdopodobnie wynika to z małej ilości przykładów zbioru.
 # Bibliografia
 
 [dataset]: https://archive.ics.uci.edu/ml/datasets/SPECT+Heart "SPECT Heart"
