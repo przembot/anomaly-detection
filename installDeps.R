@@ -19,5 +19,5 @@ install.packages("e1071")
 # Random Forest
 install.packages("randomForest")
 
-# iForest
+# utility for iForest
 install.packages("data.tree")

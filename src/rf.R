@@ -29,7 +29,6 @@ evaluate = function(trainData, testData, labelsColName, treeNum){
 }
 
 generateRaport = function(trainData, testData, labelsColName) {
-  # treeNums = c(50,100,200,300, 400, 500, 600, 700, 800, 900)
   treeNums = c(50,100,200,300, 400, 500, 900)
   qualities = matrix(nrow = length(treeNums),
                      ncol = 2)
@@ -44,8 +43,6 @@ generateRaport = function(trainData, testData, labelsColName) {
 }
 
 rfMain = function() {
-  kddcup$V3 = as.numeric(as.character(kddcup$V3))
-
   generateRaport(spectTrain, spectTest, "V1")
   dev.copy(pdf,'./docs/images/spect_rf_2.pdf')
   dev.off()
@@ -57,6 +54,6 @@ rfMain = function() {
   # to avoid error: Can not handle categorical predictors with more than 53 categories.
   # V3 : Factor w/ 66 levels
   # kddcup$V3 = as.numeric(as.character(kddcup$V3))
-  # Error in predict.randomForest(): New factor levels not present in the training data
+  # It is done in load.R
   generateRaport(kddcup, kddcupTest, "V42")
 }

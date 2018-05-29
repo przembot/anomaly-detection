@@ -5,6 +5,7 @@ author:
   - Przemysław Kopański
 lang: pl
 
+include-in-header: header.tex
 header-includes:
   - \usepackage{indentfirst}
 indent: true
@@ -330,7 +331,7 @@ Ostatecznie, najlepsze osiągnięte wyniki:
 
 ### Las losowy
 Dla algorytmu lasu losowego wykonano testy działania dla różnej liczby generowanych drzew.
-W tabeli zamieszcznono wartości parametrów, dla których algorytm osiąga najlepsze wartości dla przyjętych metryk.
+W tabeli zamieszczono wartości parametrów, dla których algorytm osiąga najlepsze wartości dla przyjętych metryk.
 
 | Dane              | ntree | quality   | specificity | sensitivity |
 | ----------------- |:-----:| :--------:|:-----------:|:-----------:|
@@ -359,7 +360,7 @@ Najlepsze wyniki zamieszczono w tabeli.
 ![Analiza ROC, iForest, zbiór KDD \label{kdd_if}](images/kdd_if.png)
 
 ## Wnioski z wyników
-W ramach projektu zaimplementowano algorytm lasu izlolacji iForest w języku R. 
+W ramach projektu zaimplementowano algorytm lasu izolacji iForest w języku R. 
 Na podstawie wykonanych testów należy stwierdzić, że algorytm z powodzeniem spełnia swoje przeznaczenie. 
 Algorytm ten, podobnie jak las losowy, stworzył model, który dla zbioru KDD Cup 1999 Data na wykresie ROC znalazł punkt w okolicy optymalnego (100%,100%).
 
@@ -368,6 +369,7 @@ Dla tego zbioru danych najlepsze rezultaty udało się osiągnąć algorytmami k
 
 Analiza wykresu krzywej ROC dla zbioru SPECT Heart sugeruje, że wszystkie badane algorytmy osiągnęły zbliżoną jakość. 
 Prawdopodobnie wynika to z małej ilości przykładów zbioru.
+
 # Bibliografia
 
 [dataset]: https://archive.ics.uci.edu/ml/datasets/SPECT+Heart "SPECT Heart"

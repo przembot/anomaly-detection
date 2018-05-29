@@ -89,7 +89,6 @@ generateRaport = function(trainData, testData, labelsColName, parameter_value, i
 
 
 knnMain = function () {
-  # q = evaluate(spectTrain, spectTest, "V1", 1, T, 'green')
   best_value = chooseBestParameter(spectTrain, spectTest, "V1")
   generateRaport(spectTrain, spectTest, "V1", 3, 20)
   dev.copy(png,'./docs/images/spect_knn.png')

@@ -50,8 +50,4 @@ svmMain = function() {
   generateRaport(pwebsitesTrain, pwebsitesTest, "Result")
   dev.copy(pdf,'./docs/images/pweb_svm_polynomial.pdf')
   dev.off()
-  
-  #generateRaport(kddcup[1:8000,], kddcupTest[1:10000,], "V42")
-  dev.copy(pdf,'./docs/images/kdd_svm_radial.pdf')
-  dev.off()
 }
